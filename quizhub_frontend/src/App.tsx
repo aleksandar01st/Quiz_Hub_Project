@@ -18,10 +18,11 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         {/* Početna ruta */}
-        <Route
+        {/* <Route
           path="/"
           element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
-        />
+        /> */}
+        <Route path="/" element={<Home />} />
 
         {/* Login ruta */}
         <Route path="/login" element={<Login />} />
