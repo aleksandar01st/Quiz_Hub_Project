@@ -1,0 +1,6 @@
+@QuizHub_backend_HostAddress = http://localhost:5048
+
+GET {{QuizHub_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
