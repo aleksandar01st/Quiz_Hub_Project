@@ -8,6 +8,7 @@ import {
 import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
+import QuizDetails from "./components/QuizDetails/QuizDetails";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -59,6 +60,10 @@ const App: React.FC = () => {
         <Route
           path="/register"
           element={!isLoggedIn ? <Register /> : <Navigate to="/home" />}
+        />
+        <Route
+          path="/quiz/:id"
+          element={isLoggedIn ? <QuizDetails /> : <Navigate to="/login" />}
         />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

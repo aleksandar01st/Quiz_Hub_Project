@@ -4,7 +4,7 @@ import { Quiz } from "../helper/Qiuz";
 import Header from "../Header/Header";
 import QuizCard from "../QuizCard/QuizCard";
 import { useNavigate } from "react-router-dom";
-// import { getAllQuizzes } from "./homeService";
+import { getAllQuizzes } from "../service/HomeService";
 
 const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -14,7 +14,16 @@ const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //  setQuizzes(getAllQuizzes());
+    const fetchQuizzes = async () => {
+      try {
+        const data = await getAllQuizzes();
+        setQuizzes(data);
+      } catch (err) {
+        console.error(err);
+        alert("Greška pri učitavanju kvizova");
+      }
+    };
+    fetchQuizzes();
   }, []);
 
   const handleQuizClick = (id: number) => {

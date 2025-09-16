@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { login } from "../service/AuthService"; // prilagodi putanju
-import { LoginDto } from "../helper/auth";
+import { LoginDto, AuthResponseDto } from "../helper/auth";
 
 interface LoginProps {
   onLogin?: () => void; // opcioni callback
@@ -15,24 +15,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const dto: LoginDto = {
-      usernameOrEmail,
-      password,
-    };
+    const dto: LoginDto = { usernameOrEmail, password };
 
     try {
       setLoading(true);
-      const result = await login(dto); // pretpostavljamo da vraća: token, username, role
+      const result: AuthResponseDto = await login(dto);
 
-      // Čuvanje u localStorage
+      // Čuvanje tokena i celog user objekta
       localStorage.setItem("token", result.token);
-      localStorage.setItem("username", result.username);
-      localStorage.setItem("role", result.role);
+      localStorage.setItem("user", JSON.stringify(result.user));
 
-      // Pozivanje callback-a da obavesti App.tsx
       if (onLogin) onLogin();
 
-      // Redirekcija na home
       window.location.href = "/home";
     } catch (error) {
       console.error("Greška pri loginu:", error);

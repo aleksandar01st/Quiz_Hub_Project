@@ -3,8 +3,15 @@ export interface LoginDto {
   password: string;
 }
 
+export interface UserDto {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  profileImage?: string;
+}
+
 export interface AuthResponseDto {
   token: string;
-  username: string;
-  role: string;
+  user: UserDto; // dodajemo user objekat
 }

@@ -35,12 +35,16 @@ namespace QuizHub_backend.Controllers
             // ✅ Generisanje tokena
             var token = GenerateJwtToken(user);
 
-            return Ok(new AuthResponseDto
+            var userDto = new UserDto
             {
-                Token = token,
+                Id = user.Id,
                 Username = user.Username,
-                Role = user.Role.ToString()
-            });
+                Email = user.Email,
+                Role = user.Role.ToString(),
+                ProfileImage = user.ProfileImage
+            };
+
+            return Ok(new { token, user = userDto });
         }
 
         private string GenerateJwtToken(User user)

@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Aleksandar Stankovic\\Quiz_Hub_Project\\QuizHub_backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|c:\\users\\aleksandar stankovic\\quiz_hub_project\\quizhub_backend\\quizhub_backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|solutionrelative:quizhub_backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|c:\\users\\aleksandar stankovic\\quiz_hub_project\\quizhub_backend\\quizhub_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|solutionrelative:quizhub_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|c:\\users\\aleksandar stankovic\\quiz_hub_project\\quizhub_backend\\quizhub_backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|solutionrelative:quizhub_backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|c:\\users\\aleksandar stankovic\\quiz_hub_project\\quizhub_backend\\quizhub_backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|solutionrelative:quizhub_backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|c:\\users\\aleksandar stankovic\\quiz_hub_project\\quizhub_backend\\quizhub_backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|solutionrelative:quizhub_backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|c:\\users\\aleksandar stankovic\\quiz_hub_project\\quizhub_backend\\quizhub_backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|solutionrelative:quizhub_backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|c:\\users\\aleksandar stankovic\\quiz_hub_project\\quizhub_backend\\quizhub_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|solutionrelative:quizhub_backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FD47076F-9E69-4DD6-9B7D-3B9E0F17FB17}|QuizHub_backend\\QuizHub_backend.csproj|c:\\users\\aleksandar stankovic\\quiz_hub_project\\quizhub_backend\\quizhub_backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -38,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,20 +50,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\Aleksandar Stankovic\\Quiz_Hub_Project\\QuizHub_backend\\QuizHub_backend\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "QuizHub_backend\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\Aleksandar Stankovic\\Quiz_Hub_Project\\QuizHub_backend\\QuizHub_backend\\Controllers\\AuthController.cs",
               "RelativeToolTip": "QuizHub_backend\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABsAAAAAAAAAAAAQwCMAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-16T11:24:33.521Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\Aleksandar Stankovic\\Quiz_Hub_Project\\QuizHub_backend\\QuizHub_backend\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "QuizHub_backend\\Properties\\launchSettings.json",
@@ -71,21 +71,19 @@
               "RelativeToolTip": "QuizHub_backend\\Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-09-16T11:09:42.527Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-16T11:09:42.527Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "UserController.cs",
               "DocumentMoniker": "C:\\Users\\Aleksandar Stankovic\\Quiz_Hub_Project\\QuizHub_backend\\QuizHub_backend\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "QuizHub_backend\\Controllers\\UserController.cs",
               "ToolTip": "C:\\Users\\Aleksandar Stankovic\\Quiz_Hub_Project\\QuizHub_backend\\QuizHub_backend\\Controllers\\UserController.cs",
               "RelativeToolTip": "QuizHub_backend\\Controllers\\UserController.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAAAEMAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAADMAAAAAAAAAAAAswEMAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-16T10:50:39.857Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-16T10:50:39.857Z"
             },
             {
               "$type": "Document",
@@ -97,21 +95,19 @@
               "RelativeToolTip": "QuizHub_backend\\Models\\User.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-16T10:50:33.294Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-16T10:50:33.294Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Aleksandar Stankovic\\Quiz_Hub_Project\\QuizHub_backend\\QuizHub_backend\\Program.cs",
               "RelativeDocumentMoniker": "QuizHub_backend\\Program.cs",
               "ToolTip": "C:\\Users\\Aleksandar Stankovic\\Quiz_Hub_Project\\QuizHub_backend\\QuizHub_backend\\Program.cs",
               "RelativeToolTip": "QuizHub_backend\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-15T19:05:43.273Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-15T19:05:43.273Z"
             },
             {
               "$type": "Document",
@@ -123,8 +119,7 @@
               "RelativeToolTip": "QuizHub_backend\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-09-15T18:45:41.046Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-15T18:45:41.046Z"
             },
             {
               "$type": "Document",
@@ -136,8 +131,7 @@
               "RelativeToolTip": "QuizHub_backend\\Data\\QuizHubContext.cs",
               "ViewState": "AgIAAAQAAAAAAAAAAAAAABAAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-14T12:19:25.459Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-14T12:19:25.459Z"
             }
           ]
         }
