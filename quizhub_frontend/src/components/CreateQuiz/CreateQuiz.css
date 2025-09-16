@@ -1,0 +1,104 @@
+.create-quiz-container {
+  max-width: 550px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  background: linear-gradient(145deg, #ffffff, #f2f4ff);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-wrapper {
+  background: rgba(255, 255, 255, 0.95); /* blago providna bela pozadina */
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.create-quiz-container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+  font-size: 1.8rem;
+  letter-spacing: 0.5px;
+}
+
+.create-quiz-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.create-quiz-form input,
+.create-quiz-form textarea,
+.create-quiz-form select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.create-quiz-form input:focus,
+.create-quiz-form textarea:focus,
+.create-quiz-form select:focus {
+  border-color: #4a63e7;
+  box-shadow: 0 0 5px rgba(74, 99, 231, 0.3);
+  outline: none;
+}
+
+.create-quiz-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 1rem; /* razmak između dugmadi */
+  align-items: stretch;
+}
+
+.back-btn,
+.submit-btn {
+  flex: 1;
+  padding: 0.9rem 0;
+  font-size: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+  display: flex;
+  justify-content: center; /* centriranje teksta */
+  align-items: center; /* centriranje teksta */
+}
+
+.back-btn {
+  background-color: #aaa;
+  color: white;
+}
+
+.back-btn:hover {
+  background-color: #888;
+}
+
+.submit-btn {
+  background-color: #4a63e7;
+  color: white;
+}
+
+.submit-btn:hover {
+  background-color: #394ccf;
+}

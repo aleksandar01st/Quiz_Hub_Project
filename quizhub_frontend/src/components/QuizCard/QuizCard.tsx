@@ -9,6 +9,7 @@ interface QuizCardProps {
   difficulty: string;
   timeLimit: number;
   onClick: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
 const QuizCard: React.FC<QuizCardProps> = ({
@@ -19,16 +20,34 @@ const QuizCard: React.FC<QuizCardProps> = ({
   difficulty,
   timeLimit,
   onClick,
+  onDelete,
 }) => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = user.role === "Admin";
+
   return (
-    <div className="quiz-card" onClick={() => onClick(id)}>
-      <h3>{title}</h3>
-      <p>{description}</p>
-      <div className="quiz-info">
-        <span>⏱ {questionsCount} pitanja</span>
-        <span>📊 {difficulty}</span>
-        <span>🕒 {timeLimit} min</span>
+    <div className="quiz-card">
+      <div onClick={() => onClick(id)} style={{ cursor: "pointer" }}>
+        <h3>{title}</h3>
+        <p>{description}</p>
+        <div className="quiz-info">
+          <span>⏱ {questionsCount} pitanja</span>
+          <span>📊 {difficulty}</span>
+          <span>🕒 {timeLimit} min</span>
+        </div>
       </div>
+
+      {isAdmin && onDelete && (
+        <button
+          className="delete-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(id);
+          }}
+        >
+          Obriši kviz
+        </button>
+      )}
     </div>
   );
 };

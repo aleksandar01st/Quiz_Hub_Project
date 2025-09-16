@@ -4,7 +4,7 @@ import { Quiz } from "../helper/Qiuz";
 import Header from "../Header/Header";
 import QuizCard from "../QuizCard/QuizCard";
 import { useNavigate } from "react-router-dom";
-import { getAllQuizzes } from "../service/HomeService";
+import { getAllQuizzes, deleteQuiz } from "../service/HomeService";
 
 const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -28,6 +28,20 @@ const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
 
   const handleQuizClick = (id: number) => {
     navigate(`/quiz/${id}`);
+  };
+
+  const handleDeleteQuiz = async (id: number) => {
+    if (!window.confirm("Da li ste sigurni da želite da obrišete kviz?"))
+      return;
+
+    try {
+      await deleteQuiz(id);
+      // osveži listu kvizova
+      setQuizzes(quizzes.filter((q) => q.id !== id));
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Greška pri brisanju kviza");
+    }
   };
 
   const filteredQuizzes = quizzes.filter((quiz) => {
@@ -91,6 +105,7 @@ const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
                 difficulty={quiz.difficulty}
                 timeLimit={quiz.timeLimit}
                 onClick={handleQuizClick}
+                onDelete={handleDeleteQuiz}
               />
             ))}
           </div>

@@ -44,3 +44,20 @@ export const getQuizById = async (id: number): Promise<Quiz | null> => {
     return null;
   }
 };
+
+export const deleteQuiz = async (id: number) => {
+  const response = await fetch(`${API_URL}/quiz/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Greška pri brisanju kviza");
+  }
+
+  return true; // uspešno obrisano
+};

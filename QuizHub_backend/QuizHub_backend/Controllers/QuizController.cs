@@ -74,5 +74,19 @@ namespace QuizHub_backend.Controllers
                 TimeLimit = quiz.TimeLimit
             });
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteQuiz(long id)
+        {
+            var quiz = _context.Quizzes.Find(id);
+            if (quiz == null)
+                return NotFound(new { message = "Kviz nije pronađen." });
+
+            _context.Quizzes.Remove(quiz);
+            _context.SaveChanges();
+
+            return Ok(new { message = "Kviz je uspešno obrisan." });
+        }
+
     }
 }

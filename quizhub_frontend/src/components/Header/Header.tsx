@@ -14,11 +14,16 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const username = user.username || "Korisnik";
   const userImage = user.profileImage || "/image/default-avatar.png";
+  const role = user.role || "User"; // pretpostavimo da je role string: "Admin" ili "User"
 
   const handleLogout = () => {
     localStorage.clear();
     onLogout(); // osvežava state u App.tsx
     navigate("/login", { replace: true });
+  };
+
+  const handleCreateQuiz = () => {
+    navigate("/create-quiz"); // ili odgovarajuća ruta za kreiranje kviza
   };
 
   useEffect(() => {
@@ -40,6 +45,11 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
         <span className="logo-text">KvizHub</span>
       </div>
       <div className="header-right" ref={menuRef}>
+        {role === "Admin" && (
+          <button className="create-quiz-btn" onClick={handleCreateQuiz}>
+            Kreiraj kviz
+          </button>
+        )}
         <div className="user-info" onClick={() => setMenuOpen((prev) => !prev)}>
           <img
             src={userImage || "/image/default-avatar.png"}

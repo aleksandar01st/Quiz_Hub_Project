@@ -4,13 +4,16 @@
   border-radius: 10px;
   border: 1px solid #eee;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s;
-  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative; /* potrebno za pozicioniranje dugmeta */
 }
 
 .quiz-card:hover {
   transform: translateY(-5px);
-  border-color: #3f51b5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .quiz-card h3 {
@@ -25,4 +28,22 @@
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+}
+
+.delete-btn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
 }
