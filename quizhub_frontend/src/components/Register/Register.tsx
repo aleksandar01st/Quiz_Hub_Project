@@ -1,21 +1,53 @@
-// src/components/Register/Register.tsx
 import React, { useState } from "react";
-import "../Login/Login.css"; // koristimo isti CSS kao za login
+import "../Login/Login.css";
+import { createUser } from "../service/UserService";
+import { CreateUserDto } from "../helper/user";
 
 function Register() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState<CreateUserDto>({
+    username: "",
+    email: "",
+    password: "",
+    role: "User",
+    profileImage: "", // sada prazno dok user ne odabere
+  });
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm({ ...form, profileImage: reader.result as string });
+    };
+    reader.readAsDataURL(file); // konverzija u base64
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
+    if (form.password !== confirmPassword) {
       alert("Lozinke se ne poklapaju!");
       return;
     }
-    console.log("Register attempt:", { username, email, password });
-    // ovde ide poziv ka backendu preko authService
+
+    try {
+      setLoading(true);
+      const newUser = await createUser(form);
+      console.log("Uspešna registracija:", newUser);
+      alert("Registracija uspešna! Možete se prijaviti.");
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Greška pri registraciji:", error);
+      alert("Došlo je do greške pri registraciji.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,8 +60,9 @@ function Register() {
             <label>Korisničko ime</label>
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              name="username"
+              value={form.username}
+              onChange={handleChange}
               placeholder="Unesite korisničko ime"
               required
             />
@@ -39,8 +72,9 @@ function Register() {
             <label>Email</label>
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={form.email}
+              onChange={handleChange}
               placeholder="Unesite email"
               required
             />
@@ -50,8 +84,9 @@ function Register() {
             <label>Lozinka</label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={form.password}
+              onChange={handleChange}
               placeholder="Unesite lozinku"
               required
             />
@@ -68,8 +103,25 @@ function Register() {
             />
           </div>
 
-          <button type="submit" className="login-btn">
-            Registracija
+          {/* ✅ Novi deo za upload slike */}
+          <div className="form-group">
+            <label>Profilna slika</label>
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+            {form.profileImage && (
+              <img
+                src={form.profileImage}
+                alt="Preview"
+                style={{
+                  marginTop: "10px",
+                  maxWidth: "100px",
+                  borderRadius: "50%",
+                }}
+              />
+            )}
+          </div>
+
+          <button type="submit" className="login-btn" disabled={loading}>
+            {loading ? "Registracija..." : "Registracija"}
           </button>
         </form>
 

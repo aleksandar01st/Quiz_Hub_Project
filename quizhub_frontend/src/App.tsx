@@ -1,5 +1,4 @@
-// src/App.tsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,32 +10,56 @@ import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 
 const App: React.FC = () => {
-  // primer provere da li je korisnik ulogovan (može se kasnije zameniti sa realnom logikom)
-  const isLoggedIn = false;
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+
+  // Funkcija za logout
+  const handleLogout = () => {
+    localStorage.clear();
+    setIsLoggedIn(false); // osvežava state → rerender i redirect
+  };
+
+  // Funkcija za login
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
 
   return (
     <Router>
       <Routes>
-        {/* Početna ruta */}
-        {/* <Route
+        <Route
           path="/"
-          element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
-        /> */}
-        <Route path="/" element={<Home />} />
-
-        {/* Login ruta */}
-        <Route path="/login" element={<Login />} />
-
-        {/* Register ruta */}
-        <Route path="/register" element={<Register />} />
-
-        {/* Home ruta */}
+          element={
+            isLoggedIn ? (
+              <Home onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
         <Route
           path="/home"
-          element={isLoggedIn ? <Home /> : <Navigate to="/login" />}
+          element={
+            isLoggedIn ? (
+              <Home onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
-
-        {/* fallback ruta */}
+        <Route
+          path="/login"
+          element={
+            !isLoggedIn ? (
+              <Login onLogin={handleLogin} />
+            ) : (
+              <Navigate to="/home" />
+            )
+          }
+        />
+        <Route
+          path="/register"
+          element={!isLoggedIn ? <Register /> : <Navigate to="/home" />}
+        />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

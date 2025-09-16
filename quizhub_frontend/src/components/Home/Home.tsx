@@ -6,7 +6,7 @@ import QuizCard from "../QuizCard/QuizCard";
 import { useNavigate } from "react-router-dom";
 // import { getAllQuizzes } from "./homeService";
 
-const Home: React.FC = () => {
+const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Sve");
@@ -33,7 +33,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Header />
+      <Header onLogout={onLogout} />
       <div className="home-container">
         {/* Filter bar */}
         <div className="filter-bar">
