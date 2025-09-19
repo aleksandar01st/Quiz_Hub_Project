@@ -17,7 +17,8 @@ namespace QuizHub_backend.Models
         public long QuizId { get; set; }
         public Quiz Quiz { get; set; }
 
-        public ICollection<AnswerOption> AnswerOptions { get; set; }
-        public ICollection<UserAnswer> UserAnswers { get; set; }
+        public ICollection<AnswerOption> AnswerOptions { get; set; } = new List<AnswerOption>();
+        public ICollection<UserAnswer> UserAnswers { get; set; } = new List<UserAnswer>();
+
     }
 }

@@ -88,5 +88,46 @@ namespace QuizHub_backend.Controllers
             return Ok(new { message = "Kviz je uspešno obrisan." });
         }
 
+        [HttpGet("categories")]
+        public ActionResult<IEnumerable<string>> GetCategories()
+        {
+            var categories = _context.Quizzes
+                .Select(q => q.Category)
+                .Distinct()
+                .ToList();
+
+            return Ok(categories);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult<QuizDto> UpdateQuiz(int id, CreateQuizDto dto)
+        {
+            var quiz = _context.Quizzes.FirstOrDefault(q => q.Id == id);
+
+            if (quiz == null)
+            {
+                return NotFound(new { message = "Kviz nije pronađen." });
+            }
+
+            // Izmena polja
+            quiz.Title = dto.Title;
+            quiz.Description = dto.Description;
+            quiz.Category = dto.Category;
+            quiz.Difficulty = dto.Difficulty;
+            quiz.TimeLimit = dto.TimeLimit;
+
+            _context.SaveChanges();
+
+            return Ok(new QuizDto
+            {
+                Id = quiz.Id,
+                Title = quiz.Title,
+                Description = quiz.Description,
+                Category = quiz.Category,
+                Difficulty = quiz.Difficulty,
+                TimeLimit = quiz.TimeLimit
+            });
+        }
+
     }
 }

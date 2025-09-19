@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./QuizCard.css";
 
 interface QuizCardProps {
@@ -10,6 +10,15 @@ interface QuizCardProps {
   timeLimit: number;
   onClick: (id: number) => void;
   onDelete?: (id: number) => void;
+  onEdit?: (
+    id: number,
+    data: {
+      title: string;
+      description: string;
+      difficulty: string;
+      timeLimit: number;
+    }
+  ) => void;
 }
 
 const QuizCard: React.FC<QuizCardProps> = ({
@@ -21,9 +30,37 @@ const QuizCard: React.FC<QuizCardProps> = ({
   timeLimit,
   onClick,
   onDelete,
+  onEdit,
 }) => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isAdmin = user.role === "Admin";
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({
+    title,
+    description,
+    difficulty,
+    timeLimit,
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setEditData({
+      ...editData,
+      [name]: name === "timeLimit" ? Number(value) : value,
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onEdit) {
+      onEdit(id, editData);
+    }
+    setIsEditing(false);
+  };
 
   return (
     <div className="quiz-card">
@@ -37,16 +74,29 @@ const QuizCard: React.FC<QuizCardProps> = ({
         </div>
       </div>
 
-      {isAdmin && onDelete && (
-        <button
-          className="delete-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(id);
-          }}
-        >
-          Obriši kviz
-        </button>
+      {isAdmin && (
+        <div className="admin-actions">
+          <button
+            className="edit-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.location.href = `/edit-quiz/${id}`;
+            }}
+          >
+            Izmeni kviz
+          </button>
+          {onDelete && (
+            <button
+              className="delete-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(id);
+              }}
+            >
+              Obriši kviz
+            </button>
+          )}
+        </div>
       )}
     </div>
   );

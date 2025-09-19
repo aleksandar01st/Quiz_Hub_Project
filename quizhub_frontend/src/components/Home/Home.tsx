@@ -4,13 +4,19 @@ import { Quiz } from "../helper/Qiuz";
 import Header from "../Header/Header";
 import QuizCard from "../QuizCard/QuizCard";
 import { useNavigate } from "react-router-dom";
-import { getAllQuizzes, deleteQuiz } from "../service/HomeService";
+import {
+  getAllQuizzes,
+  deleteQuiz,
+  getCategories,
+  updateQuiz,
+} from "../service/HomeService";
 
 const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Sve");
   const [difficulty, setDifficulty] = useState("Sve");
+  const [categories, setCategories] = useState<string[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,6 +24,9 @@ const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
       try {
         const data = await getAllQuizzes();
         setQuizzes(data);
+
+        const cats = await getCategories();
+        setCategories(cats);
       } catch (err) {
         console.error(err);
         alert("Greška pri učitavanju kvizova");
@@ -44,13 +53,40 @@ const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
     }
   };
 
+  const handleEditQuiz = async (
+    id: number,
+    updatedData: {
+      title: string;
+      description: string;
+      difficulty: string;
+      timeLimit: number;
+    }
+  ) => {
+    try {
+      const updatedQuiz = await updateQuiz(id, updatedData);
+
+      // Osveži listu kvizova lokalno
+      setQuizzes((prev) =>
+        prev.map((q) => (q.id === id ? { ...q, ...updatedQuiz } : q))
+      );
+
+      alert("Kviz uspešno izmenjen!");
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Greška pri izmeni kviza");
+    }
+  };
+
   const filteredQuizzes = quizzes.filter((quiz) => {
     const matchesSearch = quiz.title
       .toLowerCase()
       .includes(search.toLowerCase());
+
     const matchesCategory = category === "Sve" || quiz.category === category;
+
     const matchesDifficulty =
       difficulty === "Sve" || quiz.difficulty === difficulty;
+
     return matchesSearch && matchesCategory && matchesDifficulty;
   });
 
@@ -71,22 +107,23 @@ const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="Sve">Programiranje</option>
-            <option value="Istorija">Istorija</option>
-            <option value="Geografija">Geografija</option>
+            <option value="Sve">Sve kategorije</option>
+            {categories.map((cat, index) => (
+              <option key={index} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
 
           <select
             value={difficulty}
             onChange={(e) => setDifficulty(e.target.value)}
           >
-            <option value="Sve">Težina</option>
+            <option value="Sve">Sve težine</option>
             <option value="Lako">Lako</option>
             <option value="Srednje">Srednje</option>
             <option value="Teško">Teško</option>
           </select>
-
-          <button className="filter-btn">Filtriraj</button>
         </div>
 
         <h2 className="home-title">Dostupni kvizovi</h2>
@@ -95,7 +132,7 @@ const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
         <div className="home-container">
           {/* <h2 className="home-title">Dostupni kvizovi</h2> */}
           <div className="quiz-list">
-            {quizzes.map((quiz) => (
+            {filteredQuizzes.map((quiz) => (
               <QuizCard
                 key={quiz.id}
                 id={quiz.id}
@@ -106,6 +143,7 @@ const Home: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
                 timeLimit={quiz.timeLimit}
                 onClick={handleQuizClick}
                 onDelete={handleDeleteQuiz}
+                onEdit={handleEditQuiz}
               />
             ))}
           </div>

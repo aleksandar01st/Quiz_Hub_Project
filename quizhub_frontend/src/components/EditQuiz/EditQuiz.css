@@ -1,0 +1,87 @@
+.edit-quiz-container {
+  max-width: 550px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  background: linear-gradient(145deg, #ffffff, #f2f4ff);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.edit-quiz-container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+  font-size: 1.8rem;
+  letter-spacing: 0.5px;
+}
+
+.edit-quiz-form label {
+  display: block;
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.edit-quiz-form input,
+.edit-quiz-form textarea,
+.edit-quiz-form select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.edit-quiz-form input:focus,
+.edit-quiz-form textarea:focus,
+.edit-quiz-form select:focus {
+  border-color: #4a63e7;
+  box-shadow: 0 0 5px rgba(74, 99, 231, 0.3);
+  outline: none;
+}
+
+.edit-quiz-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.back-btn,
+.submit-btn {
+  flex: 1;
+  padding: 0.9rem 0;
+  font-size: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.back-btn {
+  background-color: #aaa;
+  color: white;
+}
+
+.back-btn:hover {
+  background-color: #888;
+}
+
+.submit-btn {
+  background-color: #4a63e7;
+  color: white;
+}
+
+.submit-btn:hover {
+  background-color: #394ccf;
+}
