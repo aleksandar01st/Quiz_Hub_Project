@@ -20,10 +20,7 @@
   margin: 0.3rem 0;
 }
 
-.quiz-details strong {
-  color: #222;
-}
-
+/* ====== Rezultati ====== */
 .results-table {
   width: 100%;
   border-collapse: collapse;
@@ -53,6 +50,7 @@
   background-color: #e8eaf6;
 }
 
+/* ====== Dugmad ====== */
 .start-btn {
   margin-top: 2rem;
   padding: 0.9rem 2rem;
@@ -87,31 +85,38 @@
   color: #2c3e9d;
 }
 
-.questions-list li {
+/* ====== Pitanja ====== */
+.questions-list {
   list-style: none;
-  margin-bottom: 0.5rem;
-  padding: 0; /* ukloniti višak */
+  padding: 0;
+  margin: 1rem 0;
 }
 
 .question-item {
   display: flex;
-  justify-content: space-between; /* pitanje levo, dugmad desno */
+  justify-content: space-between; /* tekst levo, dugmad desno */
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
   background: #f9f9f9;
   border-radius: 6px;
   border: 1px solid #eee;
+  margin-bottom: 0.5rem;
+}
+
+.question-text {
+  flex: 1; /* zauzima prostor levo */
+  margin-right: 1rem;
 }
 
 .admin-buttons {
   display: flex;
-  gap: 0.5rem; /* razmak između dugmadi */
+  gap: 0.5rem;
 }
 
 .admin-buttons button {
-  padding: 0.3rem 0.6rem;
+  padding: 0.4rem 0.8rem;
   font-size: 0.9rem;
-  border-radius: 4px;
+  border-radius: 5px;
   border: none;
   cursor: pointer;
   transition: background 0.2s;

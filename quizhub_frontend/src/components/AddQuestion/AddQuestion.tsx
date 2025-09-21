@@ -17,7 +17,10 @@ const AddQuestion: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!quizId) return;
+    if (!quizId) {
+      alert("ID kviza nije definisan!");
+      return;
+    }
 
     if (!text.trim()) {
       alert("Tekst pitanja je obavezan.");
@@ -47,7 +50,7 @@ const AddQuestion: React.FC = () => {
     try {
       await createQuestion(payload);
       alert("Pitanje je uspešno dodato.");
-      navigate(`/quiz-details/${quizId}`);
+      navigate(`/quiz/${quizId}`);
     } catch (err) {
       console.error(err);
       alert("Greška pri dodavanju pitanja.");
@@ -177,7 +180,7 @@ const AddQuestion: React.FC = () => {
         <button type="submit" disabled={loading}>
           {loading ? "Dodavanje..." : "Dodaj pitanje"}
         </button>
-        <button type="button" onClick={() => navigate(-1)}>
+        <button type="button" onClick={() => navigate(`/quiz/${quizId}`)}>
           Otkaži
         </button>
       </form>

@@ -310,6 +310,38 @@
     ]
   },
   {
+    "ContainingType": "QuizHub_backend.Controllers.ResultsController",
+    "Method": "SaveResult",
+    "RelativePath": "api/Results",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "QuizHub_backend.DTOs.SaveResultDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "QuizHub_backend.Controllers.ResultsController",
+    "Method": "GetResultsByQuiz",
+    "RelativePath": "api/Results/quiz/{quizId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "quizId",
+        "Type": "System.Int64",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "QuizHub_backend.Controllers.UserController",
     "Method": "GetUsers",
     "RelativePath": "api/User",

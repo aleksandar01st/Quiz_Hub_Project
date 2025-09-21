@@ -12,6 +12,7 @@ import QuizDetails from "./components/QuizDetails/QuizDetails";
 import CreateQuiz from "./components/CreateQuiz/CreateQuiz";
 import EditQuiz from "./components/EditQuiz/EditQuiz";
 import AddQuestion from "./components/AddQuestion/AddQuestion";
+import TakeQuiz from "./components/TakeQuiz/TakeQuiz";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -79,6 +80,10 @@ const App: React.FC = () => {
         <Route
           path="/add-question/:quizId"
           element={isLoggedIn ? <AddQuestion /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/take-quiz/:id"
+          element={isLoggedIn ? <TakeQuiz /> : <Navigate to="/login" />}
         />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

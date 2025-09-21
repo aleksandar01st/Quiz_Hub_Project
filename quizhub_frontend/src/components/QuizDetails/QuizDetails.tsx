@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Header from "../Header/Header";
 import "./QuizDetails.css";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -8,6 +9,7 @@ import {
   createQuestion,
   updateQuestion,
 } from "../service/QuizDetailsService";
+import { getResultsByQuiz } from "../service/ResultService";
 
 interface Quiz {
   id: number;
@@ -53,9 +55,14 @@ const QuizDetails: React.FC = () => {
         const questionData = await getQuestionsByQuizId(parseInt(id));
         setQuestions(questionData);
 
-        // Ako želiš rezultate igrača, ovde možeš pozvati fetch za rezultate
-        // const resultsData = await getQuizResults(parseInt(id));
-        // setResults(resultsData);
+        const resultsData = await getResultsByQuiz(parseInt(id));
+        // mapiraj vreme u "mm:ss" format ako želiš
+        const formattedResults = resultsData.map((r) => ({
+          username: r.username,
+          score: r.score,
+          time: new Date(r.timeTaken * 1000).toISOString().substr(14, 5), // mm:ss
+        }));
+        setResults(formattedResults);
       } catch (err) {
         console.error(err);
         alert("Greška pri učitavanju kviza");
@@ -116,88 +123,105 @@ const QuizDetails: React.FC = () => {
   };
 
   return (
-    <div className="quiz-details">
-      <button className="back-btn" onClick={() => navigate(-1)}>
-        ← Nazad
-      </button>
-      {quiz && (
-        <>
-          <div className="quiz-info-card">
-            <h2>{quiz.title}</h2>
-            <p>{quiz.description}</p>
-            <div className="quiz-meta">
-              <span>📋 {quiz.questionsCount} pitanja</span>
-              <span>📊 Težina: {quiz.difficulty}</span>
-              <span>⏱ {quiz.timeLimit} min</span>
+    <>
+      {/* <Header onLogout={onLogout} /> */}
+      <div className="quiz-details">
+        <button className="back-btn" onClick={() => navigate(`/`)}>
+          ← Nazad
+        </button>
+        {quiz && (
+          <>
+            <div className="quiz-info-card">
+              <h2>{quiz.title}</h2>
+              <p>{quiz.description}</p>
+              <div className="quiz-meta">
+                <span>📋 {quiz.questionsCount} pitanja</span>
+                <span>📊 Težina: {quiz.difficulty}</span>
+                <span>⏱ {quiz.timeLimit} min</span>
+              </div>
+
+              <h3>Pitanja u kvizu</h3>
+              {isAdmin ? (
+                questions.length === 0 ? (
+                  <p>Ovaj kviz trenutno nema pitanja.</p>
+                ) : (
+                  <ul className="questions-list">
+                    {questions.map((q, index) => (
+                      <li key={q.id} className="question-item">
+                        <div className="question-text">
+                          <strong>{index + 1}.</strong> {q.text}{" "}
+                          <em>({q.questionType})</em>
+                        </div>
+
+                        {isAdmin && (
+                          <div className="admin-buttons">
+                            <button
+                              className="edit-btn"
+                              onClick={() => navigate(`/edit-question/${q.id}`)}
+                            >
+                              Izmeni
+                            </button>
+                            <button
+                              className="delete-btn"
+                              onClick={() => handleDeleteQuestion(q.id)}
+                            >
+                              Obriši
+                            </button>
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )
+              ) : (
+                <p>
+                  Samo administratori mogu da vide pitanja ovog kviza. Zapocni
+                  kviz da vidis pitanja :)
+                </p>
+              )}
+
+              {isAdmin && (
+                <button
+                  className="add-btn"
+                  onClick={() => navigate(`/add-question/${quiz?.id}`)}
+                >
+                  Dodaj novo pitanje
+                </button>
+              )}
             </div>
 
-            <h3>Pitanja u kvizu</h3>
-            {questions.length === 0 ? (
-              <p>Ovaj kviz trenutno nema pitanja.</p>
-            ) : (
-              <ul className="questions-list">
-                {questions.map((q, index) => (
-                  <li key={q.id} className="question-item">
-                    <span>
-                      <strong>{index + 1}.</strong> {q.text}{" "}
-                      <em>({q.questionType})</em>
-                    </span>
-
-                    {isAdmin && (
-                      <span className="admin-buttons">
-                        <button
-                          className="edit-btn"
-                          onClick={() => navigate(`/edit-question/${q.id}`)}
-                        >
-                          Izmeni
-                        </button>
-                        <button
-                          className="delete-btn"
-                          onClick={() => handleDeleteQuestion(q.id)}
-                        >
-                          Obriši
-                        </button>
-                      </span>
-                    )}
-                  </li>
+            <h3>Rezultati igrača</h3>
+            <table className="results-table">
+              <thead>
+                <tr>
+                  <th>Korisnik</th>
+                  <th>Poeni</th>
+                  <th>Vreme</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((r, index) => (
+                  <tr key={index}>
+                    <td>{r.username}</td>
+                    <td>{r.score}</td>
+                    <td>{r.time}</td>
+                  </tr>
                 ))}
-              </ul>
-            )}
+              </tbody>
+            </table>
 
-            {isAdmin && (
+            {!isAdmin && (
               <button
-                className="add-btn"
-                onClick={() => navigate(`/add-question/${quiz?.id}`)}
+                className="start-btn"
+                onClick={() => navigate(`/take-quiz/${quiz.id}`)}
               >
-                Dodaj novo pitanje
+                Započni kviz
               </button>
             )}
-          </div>
-
-          <h3>Rezultati igrača</h3>
-          <table className="results-table">
-            <thead>
-              <tr>
-                <th>Korisnik</th>
-                <th>Poeni</th>
-                <th>Vreme</th>
-              </tr>
-            </thead>
-            <tbody>
-              {results.map((r, index) => (
-                <tr key={index}>
-                  <td>{r.username}</td>
-                  <td>{r.score}</td>
-                  <td>{r.time}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <button className="start-btn">Započni kviz</button>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
