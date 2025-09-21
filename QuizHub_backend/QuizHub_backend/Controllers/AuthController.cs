@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using QuizHub_backend.Data;
 using QuizHub_backend.DTOs;
 using QuizHub_backend.Models;
+using QuizHub_backend.Service;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,63 +14,35 @@ namespace QuizHub_backend.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly QuizHubContext _context;
-        private readonly IConfiguration _config;
+        private readonly IAuthService _authService;
 
-        public AuthController(QuizHubContext context, IConfiguration config)
+        public AuthController(IAuthService authService)
         {
-            _context = context;
-            _config = config;
+            _authService = authService;
         }
 
         [HttpPost("login")]
         public ActionResult<AuthResponseDto> Login(LoginDto dto)
         {
-            var user = _context.Users.FirstOrDefault(u =>
-                u.Username == dto.UsernameOrEmail || u.Email == dto.UsernameOrEmail);
-
-            // ✅ provera hashovane lozinke
-            if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
-                return Unauthorized("Pogrešno korisničko ime ili lozinka");
-
-            // ✅ Generisanje tokena
-            var token = GenerateJwtToken(user);
-
-            var userDto = new UserDto
+            try
             {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email,
-                Role = user.Role.ToString(),
-                ProfileImage = user.ProfileImage
-            };
+                var (token, user) = _authService.Authenticate(dto);
 
-            return Ok(new { token, user = userDto });
-        }
+                var userDto = new UserDto
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    Email = user.Email,
+                    Role = user.Role.ToString(),
+                    ProfileImage = user.ProfileImage
+                };
 
-        private string GenerateJwtToken(User user)
-        {
-            var jwtSettings = _config.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
+                return Ok(new { token, user = userDto });
+            }
+            catch (UnauthorizedAccessException ex)
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-                new Claim("userId", user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: jwtSettings["Issuer"],
-                audience: jwtSettings["Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings["ExpireMinutes"])),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                return Unauthorized(ex.Message);
+            }
         }
     }
 }

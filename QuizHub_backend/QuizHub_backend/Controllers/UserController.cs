@@ -2,6 +2,7 @@
 using QuizHub_backend.Data;
 using QuizHub_backend.DTOs;
 using QuizHub_backend.Models;
+using QuizHub_backend.Service;
 
 namespace QuizHub_backend.Controllers
 {
@@ -9,67 +10,33 @@ namespace QuizHub_backend.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly QuizHubContext _context;
+        private readonly IUserService _service;
 
-        public UserController(QuizHubContext context)
+        public UserController(IUserService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<UserDto>> GetUsers()
         {
-            var users = _context.Users.Select(u => new UserDto
-            {
-                Id = u.Id,
-                Username = u.Username,
-                Email = u.Email,
-                Role = u.Role.ToString(),
-                ProfileImage = u.ProfileImage
-            }).ToList();
-
+            var users = _service.GetUsers();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
         public ActionResult<UserDto> GetUser(long id)
         {
-            var user = _context.Users.Find(id);
-            if (user == null) return NotFound();
-
-            return Ok(new UserDto
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email,
-                Role = user.Role.ToString(),
-                ProfileImage = user.ProfileImage
-            });
+            var user = _service.GetUser(id);
+            if (user == null) return NotFound(new { message = "Korisnik nije pronađen." });
+            return Ok(user);
         }
 
         [HttpPost]
         public ActionResult<UserDto> CreateUser(CreateUserDto dto)
         {
-            var user = new User
-            {
-                Username = dto.Username,
-                Email = dto.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                Role = Enum.TryParse<UserRole>(dto.Role, out var role) ? role : UserRole.User,
-                ProfileImage = dto.ProfileImage
-            };
-
-            _context.Users.Add(user);
-            _context.SaveChanges();
-
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, new UserDto
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email,
-                Role = user.Role.ToString(),
-                ProfileImage = user.ProfileImage
-            });
+            var createdUser = _service.CreateUser(dto);
+            return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
         }
     }
 }

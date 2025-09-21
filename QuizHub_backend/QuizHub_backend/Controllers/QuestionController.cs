@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QuizHub_backend.Data;
 using QuizHub_backend.DTOs;
 using QuizHub_backend.Models;
+using QuizHub_backend.Service;
 
 namespace QuizHub_backend.Controllers
 {
@@ -10,105 +11,38 @@ namespace QuizHub_backend.Controllers
     [ApiController]
     public class QuestionController : ControllerBase
     {
-        private readonly QuizHubContext _context;
+        private readonly IQuestionService _service;
 
-        public QuestionController(QuizHubContext context)
+        public QuestionController(IQuestionService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Questions
         [HttpGet]
-        public ActionResult<IEnumerable<QuestionDto>> GetQuestions()
-        {
-            var questions = _context.Questions
-                .Select(q => new QuestionDto
-                {
-                    Id = q.Id,
-                    Text = q.Text,
-                    QuestionType = q.QuestionType,
-                    QuizId = q.QuizId
-                })
-                .ToList();
-
-            return Ok(questions);
-        }
+        public ActionResult<IEnumerable<QuestionDto>> GetQuestions() =>
+            Ok(_service.GetAll());
 
         // GET: api/Questions/5
         [HttpGet("{id}")]
         public ActionResult<QuestionDto> GetQuestion(long id)
         {
-            var question = _context.Questions.Find(id);
-            if (question == null)
-                return NotFound(new { message = "Pitanje nije pronađeno." });
-
-            return Ok(new QuestionDto
-            {
-                Id = question.Id,
-                Text = question.Text,
-                QuestionType = question.QuestionType,
-                QuizId = question.QuizId
-            });
+            var question = _service.GetById(id);
+            return question == null ? NotFound(new { message = "Pitanje nije pronađeno." }) : Ok(question);
         }
 
         // GET: api/Questions/by-quiz/5
         [HttpGet("by-quiz/{quizId}")]
-        public ActionResult<IEnumerable<QuestionDto>> GetQuestionsByQuiz(long quizId)
-        {
-            var questions = _context.Questions
-                .Where(q => q.QuizId == quizId)
-                .Select(q => new QuestionDto
-                {
-                    Id = q.Id,
-                    Text = q.Text,
-                    QuestionType = q.QuestionType,
-                    QuizId = q.QuizId,
-                    AnswerOptions = q.AnswerOptions
-                        .Select(a => new AnswerOptionDto
-                        {
-                            Id = a.Id,
-                            Text = a.Text,
-                            IsCorrect = a.IsCorrect
-                        }).ToList()
-                })
-                .ToList();
-
-            return Ok(questions);
-        }
+        public ActionResult<IEnumerable<QuestionDto>> GetQuestionsByQuiz(long quizId) =>
+            Ok(_service.GetByQuizId(quizId));
 
 
         // POST: api/Questions
         [HttpPost]
         public ActionResult<QuestionDto> CreateQuestion(CreateQuestionDto dto)
         {
-            var question = new Question
-            {
-                Text = dto.Text,
-                QuestionType = dto.QuestionType,
-                QuizId = dto.QuizId,
-                AnswerOptions = dto.AnswerOptions?.Select(a => new AnswerOption
-                {
-                    Text = a.Text,
-                    IsCorrect = a.IsCorrect
-                }).ToList() ?? new List<AnswerOption>()
-            };
-
-            _context.Questions.Add(question);
-            _context.SaveChanges();
-
-            return CreatedAtAction(nameof(GetQuestion), new { id = question.Id }, new QuestionDto
-            {
-                Id = question.Id,
-                Text = question.Text,
-                QuestionType = question.QuestionType,
-                QuizId = question.QuizId,
-                AnswerOptions = question.AnswerOptions?.Select(a => new AnswerOptionDto
-                {
-                    Id = a.Id,
-                    Text = a.Text,
-                    IsCorrect = a.IsCorrect
-                }).ToList() ?? new List<AnswerOptionDto>()
-            });
+            var created = _service.Create(dto);
+            return CreatedAtAction(nameof(GetQuestion), new { id = created.Id }, created);
         }
 
 
@@ -116,56 +50,17 @@ namespace QuizHub_backend.Controllers
         [HttpPut("{id}")]
         public ActionResult<QuestionDto> UpdateQuestion(long id, CreateQuestionDto dto)
         {
-            var question = _context.Questions
-                .Include(q => q.AnswerOptions)
-                .FirstOrDefault(q => q.Id == id);
-
-            if (question == null)
-                return NotFound(new { message = "Pitanje nije pronađeno." });
-
-            question.Text = dto.Text;
-            question.QuestionType = dto.QuestionType;
-            question.QuizId = dto.QuizId;
-
-            // Update answer options
-            question.AnswerOptions.Clear();
-            question.AnswerOptions = dto.AnswerOptions?.Select(a => new AnswerOption
-            {
-                Text = a.Text,
-                IsCorrect = a.IsCorrect,
-                QuestionId = question.Id
-            }).ToList();
-
-            _context.SaveChanges();
-
-            return Ok(new QuestionDto
-            {
-                Id = question.Id,
-                Text = question.Text,
-                QuestionType = question.QuestionType,
-                QuizId = question.QuizId,
-                AnswerOptions = question.AnswerOptions?.Select(a => new AnswerOptionDto
-                {
-                    Id = a.Id,
-                    Text = a.Text,
-                    IsCorrect = a.IsCorrect
-                }).ToList()
-            });
+            var updated = _service.Update(id, dto);
+            return updated == null
+                ? NotFound(new { message = "Pitanje nije pronađeno." })
+                : Ok(updated);
         }
 
 
         // DELETE: api/Questions/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteQuestion(long id)
-        {
-            var question = _context.Questions.Find(id);
-            if (question == null)
-                return NotFound(new { message = "Pitanje nije pronađeno." });
-
-            _context.Questions.Remove(question);
-            _context.SaveChanges();
-
-            return Ok(new { message = "Pitanje je uspešno obrisano." });
-        }
+        public IActionResult DeleteQuestion(long id) =>
+            _service.Delete(id) ? Ok(new { message = "Pitanje je uspešno obrisano." })
+                                : NotFound(new { message = "Pitanje nije pronađeno." });
     }
 }

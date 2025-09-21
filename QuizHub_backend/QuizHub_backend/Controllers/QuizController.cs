@@ -2,6 +2,7 @@
 using QuizHub_backend.Data;
 using QuizHub_backend.DTOs;
 using QuizHub_backend.Models;
+using QuizHub_backend.Service;
 
 namespace QuizHub_backend.Controllers
 {
@@ -9,125 +10,47 @@ namespace QuizHub_backend.Controllers
     [Route("api/[controller]")]
     public class QuizController : ControllerBase
     {
-        private readonly QuizHubContext _context;
+        private readonly IQuizService _service;
 
-        public QuizController(QuizHubContext context)
+        public QuizController(IQuizService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<QuizDto>> GetQuizzes()
-        {
-            var quizzes = _context.Quizzes.Select(q => new QuizDto
-            {
-                Id = q.Id,
-                Title = q.Title,
-                Description = q.Description,
-                Category = q.Category,
-                Difficulty = q.Difficulty,
-                TimeLimit = q.TimeLimit
-            }).ToList();
-
-            return Ok(quizzes);
-        }
+        public IActionResult GetQuizzes() =>
+            Ok(_service.GetAll());
 
         [HttpGet("{id}")]
-        public ActionResult<QuizDto> GetQuiz(long id)
+        public IActionResult GetQuiz(long id)
         {
-            var quiz = _context.Quizzes.Find(id);
-            if (quiz == null) return NotFound();
-
-            return Ok(new QuizDto
-            {
-                Id = quiz.Id,
-                Title = quiz.Title,
-                Description = quiz.Description,
-                Category = quiz.Category,
-                Difficulty = quiz.Difficulty,
-                TimeLimit = quiz.TimeLimit
-            });
+            var quiz = _service.GetById(id);
+            return quiz == null ? NotFound() : Ok(quiz);
         }
 
         [HttpPost]
-        public ActionResult<QuizDto> CreateQuiz(CreateQuizDto dto)
+        public IActionResult CreateQuiz(CreateQuizDto dto)
         {
-            var quiz = new Quiz
-            {
-                Title = dto.Title,
-                Description = dto.Description,
-                Category = dto.Category,
-                Difficulty = dto.Difficulty,
-                TimeLimit = dto.TimeLimit
-            };
-
-            _context.Quizzes.Add(quiz);
-            _context.SaveChanges();
-
-            return CreatedAtAction(nameof(GetQuiz), new { id = quiz.Id }, new QuizDto
-            {
-                Id = quiz.Id,
-                Title = quiz.Title,
-                Description = quiz.Description,
-                Category = quiz.Category,
-                Difficulty = quiz.Difficulty,
-                TimeLimit = quiz.TimeLimit
-            });
+            var created = _service.Create(dto);
+            return CreatedAtAction(nameof(GetQuiz), new { id = created.Id }, created);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteQuiz(long id)
         {
-            var quiz = _context.Quizzes.Find(id);
-            if (quiz == null)
-                return NotFound(new { message = "Kviz nije pronađen." });
-
-            _context.Quizzes.Remove(quiz);
-            _context.SaveChanges();
-
-            return Ok(new { message = "Kviz je uspešno obrisan." });
+            return _service.Delete(id)
+                ? Ok(new { message = "Kviz je uspešno obrisan." })
+                : NotFound(new { message = "Kviz nije pronađen." });
         }
 
         [HttpGet("categories")]
-        public ActionResult<IEnumerable<string>> GetCategories()
-        {
-            var categories = _context.Quizzes
-                .Select(q => q.Category)
-                .Distinct()
-                .ToList();
-
-            return Ok(categories);
-        }
+        public IActionResult GetCategories() => Ok(_service.GetCategories());
 
         [HttpPut("{id}")]
-        public ActionResult<QuizDto> UpdateQuiz(int id, CreateQuizDto dto)
+        public IActionResult UpdateQuiz(int id, CreateQuizDto dto)
         {
-            var quiz = _context.Quizzes.FirstOrDefault(q => q.Id == id);
-
-            if (quiz == null)
-            {
-                return NotFound(new { message = "Kviz nije pronađen." });
-            }
-
-            // Izmena polja
-            quiz.Title = dto.Title;
-            quiz.Description = dto.Description;
-            quiz.Category = dto.Category;
-            quiz.Difficulty = dto.Difficulty;
-            quiz.TimeLimit = dto.TimeLimit;
-
-            _context.SaveChanges();
-
-            return Ok(new QuizDto
-            {
-                Id = quiz.Id,
-                Title = quiz.Title,
-                Description = quiz.Description,
-                Category = quiz.Category,
-                Difficulty = quiz.Difficulty,
-                TimeLimit = quiz.TimeLimit
-            });
+            var updated = _service.Update(id, dto);
+            return updated == null ? NotFound(new { message = "Kviz nije pronađen." }) : Ok(updated);
         }
-
     }
 }
