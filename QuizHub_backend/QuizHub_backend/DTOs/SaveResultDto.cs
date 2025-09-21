@@ -16,4 +16,12 @@
         public long QuestionId { get; set; }
         public string SelectedAnswer { get; set; } = string.Empty;
     }
+
+    public class UserAnswersDto
+    {
+        public string QuestionText { get; set; } = "";
+        public string SelectedAnswer { get; set; } = "";
+        public string CorrectAnswer { get; set; } = "";
+    }
+
 }

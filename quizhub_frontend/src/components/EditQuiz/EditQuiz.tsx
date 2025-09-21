@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { updateQuiz, getQuizById } from "../service/HomeService";
+import Header from "../Header/Header";
 import "./EditQuiz.css";
 
-const EditQuiz: React.FC = () => {
+const EditQuiz: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [quizData, setQuizData] = useState({
@@ -64,6 +65,12 @@ const EditQuiz: React.FC = () => {
       console.error(err);
       alert("Greška pri izmeni kviza");
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    onLogout(); // osvežava state u App.tsx
+    navigate("/login", { replace: true });
   };
 
   return (

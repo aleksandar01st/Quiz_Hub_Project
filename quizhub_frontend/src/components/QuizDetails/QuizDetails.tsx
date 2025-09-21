@@ -35,7 +35,7 @@ interface Question {
   answerOptions?: { id: number; text: string; isCorrect: boolean }[];
 }
 
-const QuizDetails: React.FC = () => {
+const QuizDetails: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
@@ -122,9 +122,15 @@ const QuizDetails: React.FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    onLogout(); // osvežava state u App.tsx
+    navigate("/login", { replace: true });
+  };
+
   return (
-    <>
-      {/* <Header onLogout={onLogout} /> */}
+    <div>
+      <Header onLogout={handleLogout} />
       <div className="quiz-details">
         <button className="back-btn" onClick={() => navigate(`/`)}>
           ← Nazad
@@ -221,7 +227,7 @@ const QuizDetails: React.FC = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

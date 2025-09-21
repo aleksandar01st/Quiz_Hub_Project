@@ -10,5 +10,8 @@ namespace QuizHub_backend.Repository
         void AddResult(UserQuizResult result);
         IEnumerable<UserQuizResult> GetResultsByQuiz(long quizId);
         void SaveChanges();
+        IEnumerable<UserQuizResult> GetAllResults();
+        IEnumerable<User> GetAllUsers();
+        IEnumerable<UserQuizResult> GetAllResultsWithDetails();
     }
 }

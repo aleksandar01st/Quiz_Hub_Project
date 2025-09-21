@@ -3,8 +3,9 @@ import "./CreateQuiz.css";
 import { useNavigate } from "react-router-dom";
 import { createQuiz } from "../service/QuizService";
 import { CreateQuizDto } from "../helper/CreateQuizDto";
+import Header from "../Header/Header";
 
-const CreateQuiz: React.FC = () => {
+const CreateQuiz: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const navigate = useNavigate();
   const [quizData, setQuizData] = useState<CreateQuizDto>({
     title: "",
@@ -42,78 +43,87 @@ const CreateQuiz: React.FC = () => {
     navigate("/home");
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    onLogout(); // osvežava state u App.tsx
+    navigate("/login", { replace: true });
+  };
+
   return (
-    <div className="create-quiz-container">
-      <div className="form-wrapper">
-        <h2>Kreiraj novi kviz</h2>
-        <form className="create-quiz-form" onSubmit={handleSubmit}>
-          <label>
-            Naslov:
-            <input
-              type="text"
-              name="title"
-              value={quizData.title}
-              onChange={handleChange}
-              required
-            />
-          </label>
+    <div>
+      <Header onLogout={handleLogout} />
+      <div className="create-quiz-container">
+        <div className="form-wrapper">
+          <h2>Kreiraj novi kviz</h2>
+          <form className="create-quiz-form" onSubmit={handleSubmit}>
+            <label>
+              Naslov:
+              <input
+                type="text"
+                name="title"
+                value={quizData.title}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-          <label>
-            Opis:
-            <textarea
-              name="description"
-              value={quizData.description}
-              onChange={handleChange}
-              required
-            />
-          </label>
+            <label>
+              Opis:
+              <textarea
+                name="description"
+                value={quizData.description}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-          <label>
-            Kategorija:
-            <input
-              type="text"
-              name="category"
-              value={quizData.category}
-              onChange={handleChange}
-              placeholder="Unesi kategoriju"
-              required
-            />
-          </label>
+            <label>
+              Kategorija:
+              <input
+                type="text"
+                name="category"
+                value={quizData.category}
+                onChange={handleChange}
+                placeholder="Unesi kategoriju"
+                required
+              />
+            </label>
 
-          <label>
-            Težina:
-            <select
-              name="difficulty"
-              value={quizData.difficulty}
-              onChange={handleChange}
-            >
-              <option value="Lako">Lako</option>
-              <option value="Srednje">Srednje</option>
-              <option value="Teško">Teško</option>
-            </select>
-          </label>
+            <label>
+              Težina:
+              <select
+                name="difficulty"
+                value={quizData.difficulty}
+                onChange={handleChange}
+              >
+                <option value="Lako">Lako</option>
+                <option value="Srednje">Srednje</option>
+                <option value="Teško">Teško</option>
+              </select>
+            </label>
 
-          <label>
-            Vreme (min):
-            <input
-              type="number"
-              name="timeLimit"
-              value={quizData.timeLimit}
-              onChange={handleChange}
-              min={1}
-              required
-            />
-          </label>
+            <label>
+              Vreme (min):
+              <input
+                type="number"
+                name="timeLimit"
+                value={quizData.timeLimit}
+                onChange={handleChange}
+                min={1}
+                required
+              />
+            </label>
 
-          <div className="form-buttons">
-            <button type="button" className="back-btn" onClick={handleBack}>
-              Nazad
-            </button>
-            <button type="submit" className="submit-btn">
-              Kreiraj kviz
-            </button>
-          </div>
-        </form>
+            <div className="form-buttons">
+              <button type="button" className="back-btn" onClick={handleBack}>
+                Nazad
+              </button>
+              <button type="submit" className="submit-btn">
+                Kreiraj kviz
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -1,0 +1,39 @@
+.myresults-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.myresults-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.myresults-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.myresults-table th,
+.myresults-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.myresults-table th {
+  background-color: #4a90e2;
+  color: #fff;
+}
+
+.myresults-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.myresults-table tr:hover {
+  background-color: #f1f1f1;
+}

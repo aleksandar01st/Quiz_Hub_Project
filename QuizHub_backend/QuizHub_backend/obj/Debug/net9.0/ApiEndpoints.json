@@ -277,6 +277,32 @@
   },
   {
     "ContainingType": "QuizHub_backend.Controllers.ResultsController",
+    "Method": "GetUserAnswers",
+    "RelativePath": "api/Results/answers/{resultId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "resultId",
+        "Type": "System.Int64",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "QuizHub_backend.Controllers.ResultsController",
+    "Method": "GetGlobalLeaderboard",
+    "RelativePath": "api/Results/leaderboard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "QuizHub_backend.Controllers.ResultsController",
     "Method": "GetResultsByQuiz",
     "RelativePath": "api/Results/quiz/{quizId}",
     "HttpMethod": "GET",
@@ -285,6 +311,22 @@
     "Parameters": [
       {
         "Name": "quizId",
+        "Type": "System.Int64",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "QuizHub_backend.Controllers.ResultsController",
+    "Method": "GetResultsByUser",
+    "RelativePath": "api/Results/user/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
         "Type": "System.Int64",
         "IsRequired": true
       }

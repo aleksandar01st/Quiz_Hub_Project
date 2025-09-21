@@ -35,5 +35,27 @@ namespace QuizHub_backend.Controllers
             var results = _service.GetResultsByQuiz(quizId);
             return Ok(results);
         }
+
+        [HttpGet("leaderboard")]
+        public IActionResult GetGlobalLeaderboard()
+        {
+            var leaderboard = _service.GetGlobalLeaderboard();
+            return Ok(leaderboard);
+        }
+
+        [HttpGet("user/{userId}")]
+        public IActionResult GetResultsByUser(long userId)
+        {
+            var results = _service.GetResultsByUser(userId);
+            return Ok(results);
+        }
+
+        [HttpGet("answers/{resultId}")]
+        public IActionResult GetUserAnswers(long resultId)
+        {
+            var answers = _service.GetUserAnswers(resultId);
+            return Ok(answers);
+        }
+
     }
 }

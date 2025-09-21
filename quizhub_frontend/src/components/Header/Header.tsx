@@ -10,11 +10,10 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const username = user.username || "Korisnik";
   const userImage = user.profileImage || "/image/default-avatar.png";
-  const role = user.role || "User"; // pretpostavimo da je role string: "Admin" ili "User"
+  const role = user.role || "User";
 
   const handleLogout = () => {
     localStorage.clear();
@@ -45,11 +44,28 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
         <span className="logo-text">KvizHub</span>
       </div>
       <div className="header-right" ref={menuRef}>
+        <button className="create-quiz-btn" onClick={() => navigate("/")}>
+          Home
+        </button>
         {role === "Admin" && (
           <button className="create-quiz-btn" onClick={handleCreateQuiz}>
             Kreiraj kviz
           </button>
         )}
+        {role === "User" && (
+          <button
+            className="create-quiz-btn"
+            onClick={() => navigate("/my-results")}
+          >
+            Moji Rezultati
+          </button>
+        )}
+        <button
+          className="create-quiz-btn"
+          onClick={() => navigate("/leaderboard")}
+        >
+          Rang Lista
+        </button>
         <div className="user-info" onClick={() => setMenuOpen((prev) => !prev)}>
           <img
             src={userImage || "/image/default-avatar.png"}

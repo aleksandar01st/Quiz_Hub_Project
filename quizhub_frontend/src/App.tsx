@@ -13,6 +13,9 @@ import CreateQuiz from "./components/CreateQuiz/CreateQuiz";
 import EditQuiz from "./components/EditQuiz/EditQuiz";
 import AddQuestion from "./components/AddQuestion/AddQuestion";
 import TakeQuiz from "./components/TakeQuiz/TakeQuiz";
+import Leaderboard from "./components/Leaderboard/Leaderboard";
+import MyResults from "./components/MyResults/MyResults";
+import QuizResultDetails from "./components/QuizResultDetails/QuizResultDetails";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -67,15 +70,33 @@ const App: React.FC = () => {
         />
         <Route
           path="/quiz/:id"
-          element={isLoggedIn ? <QuizDetails /> : <Navigate to="/login" />}
+          element={
+            isLoggedIn ? (
+              <QuizDetails onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route
           path="/create-quiz"
-          element={isLoggedIn ? <CreateQuiz /> : <Navigate to="/home" />}
+          element={
+            isLoggedIn ? (
+              <CreateQuiz onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/home" />
+            )
+          }
         />
         <Route
           path="/edit-quiz/:id"
-          element={isLoggedIn ? <EditQuiz /> : <Navigate to="/login" />}
+          element={
+            isLoggedIn ? (
+              <EditQuiz onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route
           path="/add-question/:quizId"
@@ -84,6 +105,37 @@ const App: React.FC = () => {
         <Route
           path="/take-quiz/:id"
           element={isLoggedIn ? <TakeQuiz /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/leaderboard"
+          element={
+            isLoggedIn ? (
+              <Leaderboard onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/my-results"
+          element={
+            isLoggedIn ? (
+              <MyResults onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        <Route
+          path="/my-results/:resultId"
+          element={
+            isLoggedIn ? (
+              <QuizResultDetails onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

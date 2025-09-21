@@ -6,5 +6,8 @@ namespace QuizHub_backend.Service
     {
         QuizResultDto? SaveResult(SaveResultDto dto);
         IEnumerable<QuizResultDto> GetResultsByQuiz(long quizId);
+        IEnumerable<LeaderboardEntryDto> GetGlobalLeaderboard();
+        IEnumerable<AllQuizResultDto> GetResultsByUser(long userId);
+        IEnumerable<UserAnswersDto> GetUserAnswers(long resultId);
     }
 }

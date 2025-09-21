@@ -31,5 +31,29 @@ namespace QuizHub_backend.Repository
         }
 
         public void SaveChanges() => _context.SaveChanges();
+
+        public IEnumerable<UserQuizResult> GetAllResults()
+        {
+            return _context.UserQuizResults
+                .Include(r => r.User)   // da bismo imali Username
+                .Include(r => r.Quiz)   // opciono, ako treba
+                .ToList();
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _context.Users.ToList();
+        }
+
+        public IEnumerable<UserQuizResult> GetAllResultsWithDetails()
+        {
+            return _context.UserQuizResults
+                .Include(r => r.User)
+                .Include(r => r.Quiz)
+                .Include(r => r.UserAnswers)
+                    .ThenInclude(a => a.Question)
+                        .ThenInclude(q => q.AnswerOptions) // ovo je ključno
+                .ToList();
+        }
     }
 }
