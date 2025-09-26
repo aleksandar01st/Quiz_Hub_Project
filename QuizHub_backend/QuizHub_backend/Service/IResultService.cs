@@ -9,5 +9,7 @@ namespace QuizHub_backend.Service
         IEnumerable<LeaderboardEntryDto> GetGlobalLeaderboard();
         IEnumerable<AllQuizResultDto> GetResultsByUser(long userId);
         IEnumerable<UserAnswersDto> GetUserAnswers(long resultId);
+        IEnumerable<TopResultDto> GetTopResults(
+            long? quizId = null, DateTime? from = null, DateTime? to = null);
     }
 }

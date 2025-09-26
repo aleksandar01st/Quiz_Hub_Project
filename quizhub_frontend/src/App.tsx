@@ -16,6 +16,7 @@ import TakeQuiz from "./components/TakeQuiz/TakeQuiz";
 import Leaderboard from "./components/Leaderboard/Leaderboard";
 import MyResults from "./components/MyResults/MyResults";
 import QuizResultDetails from "./components/QuizResultDetails/QuizResultDetails";
+import TopResults from "./components/TopResults/TopResults";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -121,6 +122,17 @@ const App: React.FC = () => {
           element={
             isLoggedIn ? (
               <MyResults onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        <Route
+          path="/top-results"
+          element={
+            isLoggedIn ? (
+              <TopResults onLogout={handleLogout} />
             ) : (
               <Navigate to="/login" />
             )

@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { getUserAnswersByResult, UserAnswer } from "../service/ResultsService";
 import axios from "axios";
 import Header from "../Header/Header";
 import "./QuizResultDetails.css";
-
-interface UserAnswer {
-  questionText: string;
-  selectedAnswer: string;
-  correctAnswer: string;
-}
 
 const QuizResultDetails: React.FC<{ onLogout: () => void }> = ({
   onLogout,
@@ -29,9 +24,8 @@ const QuizResultDetails: React.FC<{ onLogout: () => void }> = ({
 
   useEffect(() => {
     if (resultId) {
-      axios
-        .get(`https://localhost:7119/api/results/answers/${resultId}`)
-        .then((res) => setAnswers(res.data))
+      getUserAnswersByResult(Number(resultId))
+        .then((res) => setAnswers(res))
         .catch((err) => console.error(err));
     }
   }, [resultId]);
@@ -41,10 +35,10 @@ const QuizResultDetails: React.FC<{ onLogout: () => void }> = ({
       <Header onLogout={handleLogout} />
       <div className="quiz-details-container">
         <div className="quiz-details-header">
-          <h2>Odgovori na kviz</h2>
           <button className="back-btn" onClick={handleBack}>
             Nazad
           </button>
+          <h2>Odgovori na kviz</h2>
         </div>
 
         <table className="quiz-details-table">
@@ -57,14 +51,44 @@ const QuizResultDetails: React.FC<{ onLogout: () => void }> = ({
             </tr>
           </thead>
           <tbody>
-            {answers.map((a, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{a.questionText}</td>
-                <td>{a.selectedAnswer}</td>
-                <td>{a.correctAnswer}</td>
-              </tr>
-            ))}
+            {answers.map((a, index) => {
+              let isCorrect = false;
+
+              // Ako korisnikov odgovor sadrži više vrednosti (MultipleChoice)
+              if (a.selectedAnswer.includes(",")) {
+                const userSet = new Set(
+                  a.selectedAnswer.split(",").map((x) => x.trim().toLowerCase())
+                );
+                const correctSet = new Set(
+                  a.correctAnswer.split(",").map((x) => x.trim().toLowerCase())
+                );
+
+                isCorrect =
+                  userSet.size === correctSet.size &&
+                  Array.from(userSet).every((val) => correctSet.has(val));
+              } else {
+                // SingleChoice, TrueFalse, Text
+                isCorrect =
+                  a.selectedAnswer.trim().toLowerCase() ===
+                  a.correctAnswer.trim().toLowerCase();
+              }
+
+              return (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{a.questionText}</td>
+                  <td
+                    style={{
+                      color: isCorrect ? "green" : "red",
+                      fontWeight: isCorrect ? "bold" : "normal",
+                    }}
+                  >
+                    {a.selectedAnswer}
+                  </td>
+                  <td>{a.correctAnswer}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

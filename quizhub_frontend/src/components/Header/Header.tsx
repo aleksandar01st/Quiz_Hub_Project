@@ -66,6 +66,14 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
         >
           Rang Lista
         </button>
+
+        <button
+          className="create-quiz-btn"
+          onClick={() => navigate("/top-results")}
+        >
+          Top Rezultati
+        </button>
+
         <div className="user-info" onClick={() => setMenuOpen((prev) => !prev)}>
           <img
             src={userImage || "/image/default-avatar.png"}

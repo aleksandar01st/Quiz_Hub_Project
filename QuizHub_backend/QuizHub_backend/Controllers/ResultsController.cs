@@ -57,5 +57,11 @@ namespace QuizHub_backend.Controllers
             return Ok(answers);
         }
 
+        [HttpGet("top")]
+        public IActionResult GetTopResults([FromQuery] long? quizId, [FromQuery] DateTime? from, [FromQuery] DateTime? to)
+        {
+            var results = _service.GetTopResults(quizId, from, to);
+            return Ok(results);
+        }
     }
 }

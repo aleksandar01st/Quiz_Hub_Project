@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Header from "../Header/Header";
+import {
+  getLeaderboard,
+  LeaderboardEntry,
+} from "../service/LeaderboardService";
 import "./Leaderboard.css";
-
-interface LeaderboardEntry {
-  userId: number;
-  username: string;
-  totalScore: number;
-  quizzesTaken: number;
-}
 
 const Leaderboard: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
@@ -22,9 +18,8 @@ const Leaderboard: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   };
 
   useEffect(() => {
-    axios
-      .get("https://localhost:7119/api/results/leaderboard")
-      .then((res) => setEntries(res.data))
+    getLeaderboard()
+      .then((data) => setEntries(data))
       .catch((err) => console.error(err));
   }, []);
 

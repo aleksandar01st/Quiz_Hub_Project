@@ -39,15 +39,14 @@
 }
 
 .quiz-details-header {
-  display: flex;
-  justify-content: space-between; /* naslov levo, dugme desno */
-  align-items: center;
+  position: relative;
   margin-bottom: 20px;
 }
 
 .quiz-details-header h2 {
   margin: 0;
   font-size: 20px;
+  text-align: center;
 }
 
 .back-btn {

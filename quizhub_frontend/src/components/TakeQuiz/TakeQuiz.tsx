@@ -96,15 +96,39 @@ const TakeQuiz: React.FC = () => {
       } else if (q.questionType === "MultipleChoice") {
         const correctIds =
           q.answerOptions?.filter((o) => o.isCorrect).map((o) => o.id) || [];
+        if (Array.isArray(userAnswer)) {
+          const allCorrectChosen = correctIds.every((id) =>
+            userAnswer.includes(id)
+          );
+          const noExtraChosen = userAnswer.every((id) =>
+            correctIds.includes(id)
+          );
+
+          if (allCorrectChosen && noExtraChosen) {
+            score++;
+          }
+        }
+      } else if (q.questionType === "TrueFalse") {
         if (
-          Array.isArray(userAnswer) &&
-          correctIds.length === userAnswer.length &&
-          correctIds.every((id) => userAnswer.includes(id))
+          (userAnswer === "true" &&
+            q.answerOptions?.some((o) => o.text === "Tačno" && o.isCorrect)) ||
+          (userAnswer === "false" &&
+            q.answerOptions?.some((o) => o.text === "Netačno" && o.isCorrect))
         ) {
           score++;
         }
-      } else if (q.questionType === "TrueFalse" || q.questionType === "Text") {
-        // dodaj logiku po potrebi
+      } else if (q.questionType === "Text") {
+        // exact match, ignorisanje velikih i malih slova i whitespace
+        const correctAnswers =
+          q.answerOptions
+            ?.filter((o) => o.isCorrect)
+            .map((o) => o.text.toLowerCase().trim()) || [];
+        if (
+          typeof userAnswer === "string" &&
+          correctAnswers.includes(userAnswer.toLowerCase().trim())
+        ) {
+          score++;
+        }
       }
     });
 
@@ -115,15 +139,31 @@ const TakeQuiz: React.FC = () => {
       userId: user.id,
       score,
       timeTaken: elapsedTime,
-      userAnswers: Object.entries(answers).map(([questionId, selected]) => ({
-        questionId: Number(questionId),
-        selectedAnswer: Array.isArray(selected)
-          ? selected.join(",")
-          : selected.toString(),
-      })),
+      userAnswers: Object.entries(answers).map(([questionId, selected]) => {
+        const q = questions.find((x) => x.id === Number(questionId));
+
+        let selectedAnswerText = "";
+
+        if (q?.questionType === "SingleChoice") {
+          const opt = q.answerOptions?.find((o) => o.id === selected);
+          selectedAnswerText = opt?.text || "";
+        } else if (q?.questionType === "MultipleChoice") {
+          selectedAnswerText = (selected as number[])
+            .map((id) => q.answerOptions?.find((o) => o.id === id)?.text || "")
+            .join(", ");
+        } else if (q?.questionType === "TrueFalse") {
+          selectedAnswerText = selected === "true" ? "Tačno" : "Netačno";
+        } else if (q?.questionType === "Text") {
+          selectedAnswerText = selected.toString();
+        }
+
+        return {
+          questionId: Number(questionId),
+          selectedAnswer: selectedAnswerText,
+        };
+      }),
     };
 
-    // Pošalji rezultat na backend
     try {
       await saveResult(dto);
     } catch (err) {

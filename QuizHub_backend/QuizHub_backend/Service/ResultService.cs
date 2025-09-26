@@ -78,7 +78,6 @@ namespace QuizHub_backend.Service
 
         public IEnumerable<LeaderboardEntryDto> GetGlobalLeaderboard()
         {
-            // uzmemo sve rezultate iz repozitorijuma
             var results = _repo.GetAllResults(); // IEnumerable<UserQuizResult>
             var users = _repo.GetAllUsers();     // IEnumerable<User>
 
@@ -87,12 +86,25 @@ namespace QuizHub_backend.Service
                 .Select(g =>
                 {
                     var user = users.FirstOrDefault(u => u.Id == g.Key);
+
+                    // Grupisanje po kvizu, uzimamo poslednji rezultat po datumu
+                    var latestResultsPerQuiz = g
+                        .GroupBy(r => r.Quiz.Id)
+                        .Select(quizGroup => quizGroup
+                            .OrderByDescending(r => r.DatePlayed)
+                            .First()
+                        )
+                        .ToList();
+
+                    var totalScore = latestResultsPerQuiz.Sum(r => r.Score);
+                    var quizzesTaken = latestResultsPerQuiz.Count;
+
                     return new LeaderboardEntryDto
                     {
                         UserId = g.Key,
                         Username = user != null ? user.Username : "Nepoznat",
-                        TotalScore = g.Sum(x => x.Score),
-                        QuizzesTaken = g.Count()
+                        TotalScore = totalScore,
+                        QuizzesTaken = quizzesTaken
                     };
                 })
                 .OrderByDescending(x => x.TotalScore)
@@ -100,6 +112,7 @@ namespace QuizHub_backend.Service
 
             return leaderboard;
         }
+
 
         public IEnumerable<AllQuizResultDto> GetResultsByUser(long userId)
         {
@@ -127,9 +140,49 @@ namespace QuizHub_backend.Service
             {
                 QuestionText = a.Question.Text,
                 SelectedAnswer = a.SelectedAnswer,
-                CorrectAnswer = a.Question.AnswerOptions
-                    .FirstOrDefault(o => o.IsCorrect)?.Text ?? "" // uzimamo tekst tačnog odgovora
+                CorrectAnswer = string.Join(", ",
+                    a.Question.AnswerOptions
+                        .Where(o => o.IsCorrect)
+                        .Select(o => o.Text))
             }).ToList();
         }
+
+        public IEnumerable<TopResultDto> GetTopResults(
+            long? quizId = null, DateTime? from = null, DateTime? to = null)
+        {
+            var results = _repo.GetAllResults(); // IEnumerable<UserQuizResult>
+
+            // Filter po kvizu
+            if (quizId.HasValue)
+                results = results.Where(r => r.Quiz.Id == quizId.Value);
+
+            // Filter po vremenskom periodu
+            if (from.HasValue)
+                results = results.Where(r => r.DatePlayed >= from.Value);
+            if (to.HasValue)
+                results = results.Where(r => r.DatePlayed <= to.Value);
+
+            // Grupisanje po kvizu + uzimanje najboljih rezultata
+            var topResults = results
+                .GroupBy(r => r.Quiz.Id)
+                .SelectMany(g => g
+                    .OrderByDescending(r => r.Score)
+                    .ThenBy(r => r.DatePlayed) // ako je score isti, raniji rezultat je bolji
+                    .Select((r, index) => new TopResultDto
+                    {
+                        QuizId = r.Quiz.Id,
+                        QuizTitle = r.Quiz.Title,
+                        Username = r.User.Username,
+                        Score = r.Score,
+                        TimeTaken = r.TimeTaken,
+                        DatePlayed = r.DatePlayed,
+                        Position = index + 1
+                    })
+                )
+                .ToList();
+
+            return topResults;
+        }
+
     }
 }
