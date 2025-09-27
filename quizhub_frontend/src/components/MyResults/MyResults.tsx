@@ -15,7 +15,6 @@ import {
 } from "chart.js";
 import "./MyResults.css";
 
-// Registracija Chart.js komponenti
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -67,24 +66,33 @@ const MyResults: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
               <th>#</th>
               <th>Kviz</th>
               <th>Poeni</th>
+              {/* <th>Procenat</th> */}
               <th>Vreme (s)</th>
               <th>Datum</th>
             </tr>
           </thead>
           <tbody>
-            {results.map((r, index) => (
-              <tr
-                key={r.id}
-                style={{ cursor: "pointer" }}
-                onClick={() => navigate(`/my-results/${r.id}`)}
-              >
-                <td>{index + 1}</td>
-                <td>{r.quizTitle}</td>
-                <td>{r.score}</td>
-                <td>{r.timeTaken}</td>
-                <td>{new Date(r.datePlayed).toLocaleString()}</td>
-              </tr>
-            ))}
+            {results.map((r, index) => {
+              const percentage =
+                r.totalPoints > 0
+                  ? ((r.score / r.totalPoints) * 100).toFixed(0)
+                  : "0";
+
+              return (
+                <tr
+                  key={r.id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/my-results/${r.id}`)}
+                >
+                  <td>{index + 1}</td>
+                  <td>{r.quizTitle}</td>
+                  <td>{r.score}</td>
+                  {/* <td>{percentage}%</td> */}
+                  <td>{r.timeTaken}</td>
+                  <td>{new Date(r.datePlayed).toLocaleString()}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
 

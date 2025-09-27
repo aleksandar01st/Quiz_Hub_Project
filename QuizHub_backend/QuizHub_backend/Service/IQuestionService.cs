@@ -8,7 +8,7 @@ namespace QuizHub_backend.Service
         QuestionDto? GetById(long id);
         IEnumerable<QuestionDto> GetByQuizId(long quizId);
         QuestionDto Create(CreateQuestionDto dto);
-        QuestionDto? Update(long id, CreateQuestionDto dto);
+        QuestionDto? Update(long id, UpdateQuestionDto dto);
         bool Delete(long id);
     }
 }

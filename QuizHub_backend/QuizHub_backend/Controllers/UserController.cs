@@ -35,8 +35,22 @@ namespace QuizHub_backend.Controllers
         [HttpPost]
         public ActionResult<UserDto> CreateUser(CreateUserDto dto)
         {
-            var createdUser = _service.CreateUser(dto);
-            return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
+            try
+            {
+                var createdUser = _service.CreateUser(dto);
+                return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
+            }
+            catch (ArgumentException ex)
+            {
+                // ❌ Validacija nije prošla → vrati 400 i poruku
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                // ⚠️ Ostale greške (npr. DB greška) → vrati 500
+                return StatusCode(500, new { message = "Došlo je do greške prilikom kreiranja korisnika." });
+            }
         }
+
     }
 }

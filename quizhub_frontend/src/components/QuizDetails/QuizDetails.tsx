@@ -6,34 +6,9 @@ import {
   getQuizById,
   getQuestionsByQuizId,
   deleteQuestion,
-  createQuestion,
-  updateQuestion,
 } from "../service/QuizDetailsService";
 import { getResultsByQuiz } from "../service/ResultService";
-
-interface Quiz {
-  id: number;
-  title: string;
-  description: string;
-  questionsCount: number;
-  difficulty: string;
-  timeLimit: number;
-  category: string;
-}
-
-interface Result {
-  username: string;
-  score: number;
-  time: string;
-}
-
-interface Question {
-  id: number;
-  text: string;
-  questionType: string;
-  quizId: number;
-  answerOptions?: { id: number; text: string; isCorrect: boolean }[];
-}
+import { Quiz, Result, Question } from "../helper/Qiuz";
 
 const QuizDetails: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const { id } = useParams<{ id: string }>();
@@ -86,42 +61,6 @@ const QuizDetails: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
     }
   };
 
-  const handleAddQuestion = async (newQuestion: {
-    text: string;
-    questionType: string;
-  }) => {
-    if (!quiz) return;
-    try {
-      const created = await createQuestion({
-        ...newQuestion,
-        quizId: quiz.id,
-      });
-      setQuestions([...questions, created]);
-      alert("Pitanje je dodato.");
-    } catch (err) {
-      console.error(err);
-      alert("Greška pri dodavanju pitanja.");
-    }
-  };
-
-  // Update pitanja
-  const handleUpdateQuestion = async (
-    questionId: number,
-    updatedData: { text: string; questionType: string }
-  ) => {
-    try {
-      const updated = await updateQuestion(questionId, {
-        ...updatedData,
-        quizId: quiz!.id,
-      });
-      setQuestions(questions.map((q) => (q.id === questionId ? updated : q)));
-      alert("Pitanje je ažurirano.");
-    } catch (err) {
-      console.error(err);
-      alert("Greška pri ažuriranju pitanja.");
-    }
-  };
-
   const handleLogout = () => {
     localStorage.clear();
     onLogout(); // osvežava state u App.tsx
@@ -141,9 +80,14 @@ const QuizDetails: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
               <h2>{quiz.title}</h2>
               <p>{quiz.description}</p>
               <div className="quiz-meta">
-                <span>📋 {quiz.questionsCount} pitanja</span>
+                <span>📋 {questions.length} pitanja</span>
                 <span>📊 Težina: {quiz.difficulty}</span>
                 <span>⏱ {quiz.timeLimit} min</span>
+                <span>
+                  💪 Ukupna težina:{" "}
+                  {questions.reduce((sum, q) => sum + (q.weight || 1), 0)}
+                  bodova
+                </span>
               </div>
 
               <h3>Pitanja u kvizu</h3>
@@ -153,28 +97,19 @@ const QuizDetails: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
                 ) : (
                   <ul className="questions-list">
                     {questions.map((q, index) => (
-                      <li key={q.id} className="question-item">
+                      <li
+                        key={q.id}
+                        className="question-item clickable" // dodaj CSS klasu da vizuelno izgleda klikabilno
+                        onClick={() =>
+                          navigate(`/add-or-edit-question/${q.id}`)
+                        } // ide na stranicu za edit
+                      >
                         <div className="question-text">
                           <strong>{index + 1}.</strong> {q.text}{" "}
-                          <em>({q.questionType})</em>
+                          <em>
+                            ({q.questionType}, težina: {q.weight})
+                          </em>
                         </div>
-
-                        {isAdmin && (
-                          <div className="admin-buttons">
-                            <button
-                              className="edit-btn"
-                              onClick={() => navigate(`/edit-question/${q.id}`)}
-                            >
-                              Izmeni
-                            </button>
-                            <button
-                              className="delete-btn"
-                              onClick={() => handleDeleteQuestion(q.id)}
-                            >
-                              Obriši
-                            </button>
-                          </div>
-                        )}
                       </li>
                     ))}
                   </ul>
@@ -202,17 +137,31 @@ const QuizDetails: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
                 <tr>
                   <th>Korisnik</th>
                   <th>Poeni</th>
+                  <th>Procenat</th>
                   <th>Vreme</th>
                 </tr>
               </thead>
               <tbody>
-                {results.map((r, index) => (
-                  <tr key={index}>
-                    <td>{r.username}</td>
-                    <td>{r.score}</td>
-                    <td>{r.time}</td>
-                  </tr>
-                ))}
+                {results.map((r, index) => {
+                  // maksimalni broj poena sabiranjem težina pitanja
+                  const maxPoints = questions.reduce(
+                    (sum, q) => sum + (q.weight || 1),
+                    0
+                  );
+                  const percentage =
+                    maxPoints > 0
+                      ? ((r.score / maxPoints) * 100).toFixed(0)
+                      : "0";
+
+                  return (
+                    <tr key={index}>
+                      <td>{r.username}</td>
+                      <td>{r.score}</td>
+                      <td>{percentage}%</td> {/* prikaz postotka */}
+                      <td>{r.time}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
 

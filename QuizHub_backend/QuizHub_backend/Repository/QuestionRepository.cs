@@ -36,5 +36,6 @@ namespace QuizHub_backend.Repository
         public void Delete(Question question) => _context.Questions.Remove(question);
 
         public void Save() => _context.SaveChanges();
+
     }
 }

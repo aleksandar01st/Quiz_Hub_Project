@@ -6,7 +6,7 @@ import "./AddQuestion.css";
 const AddQuestion: React.FC = () => {
   const { quizId } = useParams<{ quizId: string }>();
   const navigate = useNavigate();
-
+  const [weight, setWeight] = useState<number>(1);
   const [text, setText] = useState("");
   const [questionType, setQuestionType] = useState("SingleChoice"); // primer tipa
   const [loading, setLoading] = useState(false);
@@ -31,6 +31,7 @@ const AddQuestion: React.FC = () => {
     const payload: any = {
       text,
       questionType,
+      weight,
       quizId: parseInt(quizId),
     };
 
@@ -87,6 +88,14 @@ const AddQuestion: React.FC = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
           required
+        />
+
+        <label>Težina pitanja:</label>
+        <input
+          type="number"
+          value={weight}
+          onChange={(e) => setWeight(parseInt(e.target.value))}
+          min={1}
         />
 
         <label>Tip pitanja:</label>

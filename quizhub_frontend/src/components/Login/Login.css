@@ -6,6 +6,12 @@
   background-color: #f5f7fb;
 }
 
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
 .login-card {
   background: #fff;
   padding: 2rem 3rem;

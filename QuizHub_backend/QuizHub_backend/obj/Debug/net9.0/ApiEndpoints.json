@@ -112,7 +112,7 @@
       },
       {
         "Name": "dto",
-        "Type": "QuizHub_backend.DTOs.CreateQuestionDto",
+        "Type": "QuizHub_backend.DTOs.UpdateQuestionDto",
         "IsRequired": true
       }
     ],
@@ -331,13 +331,8 @@
         "IsRequired": false
       },
       {
-        "Name": "from",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
-      },
-      {
-        "Name": "to",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Name": "period",
+        "Type": "System.String",
         "IsRequired": false
       }
     ],

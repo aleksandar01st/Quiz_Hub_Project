@@ -3,7 +3,22 @@ export interface Quiz {
   title: string;
   description: string;
   questionsCount: number;
-  difficulty: "Lako" | "Srednje" | "Teško";
-  timeLimit: number; // u minutima
+  difficulty: string;
+  timeLimit: number;
   category: string;
+}
+
+export interface Result {
+  username: string;
+  score: number;
+  time: string;
+}
+
+export interface Question {
+  id: number;
+  text: string;
+  questionType: string;
+  quizId: number;
+  weight: number;
+  answerOptions?: { id: number; text: string; isCorrect: boolean }[];
 }

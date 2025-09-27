@@ -9,10 +9,13 @@ function Register() {
     email: "",
     password: "",
     role: "User",
-    profileImage: "", // sada prazno dok user ne odabere
+    profileImage: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // ✅ novo: error poruka sa backa
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,25 +29,31 @@ function Register() {
     reader.onloadend = () => {
       setForm({ ...form, profileImage: reader.result as string });
     };
-    reader.readAsDataURL(file); // konverzija u base64
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setError(null); // resetujemo error
+
     if (form.password !== confirmPassword) {
-      alert("Lozinke se ne poklapaju!");
+      setError("Lozinke se ne poklapaju!");
       return;
     }
 
     try {
       setLoading(true);
-      const newUser = await createUser(form);
-      console.log("Uspešna registracija:", newUser);
+      await createUser(form);
       alert("Registracija uspešna! Možete se prijaviti.");
       window.location.href = "/login";
-    } catch (error) {
-      console.error("Greška pri registraciji:", error);
-      alert("Došlo je do greške pri registraciji.");
+    } catch (err: any) {
+      // ✅ backend šalje { message: "tekst greške" }
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Došlo je do greške pri registraciji.");
+      }
     } finally {
       setLoading(false);
     }
@@ -103,7 +112,6 @@ function Register() {
             />
           </div>
 
-          {/* ✅ Novi deo za upload slike */}
           <div className="form-group">
             <label>Profilna slika</label>
             <input type="file" accept="image/*" onChange={handleImageChange} />
@@ -119,6 +127,9 @@ function Register() {
               />
             )}
           </div>
+
+          {/* ✅ Error message */}
+          {error && <p className="error-message">{error}</p>}
 
           <button type="submit" className="login-btn" disabled={loading}>
             {loading ? "Registracija..." : "Registracija"}

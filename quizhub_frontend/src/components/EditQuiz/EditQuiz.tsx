@@ -74,74 +74,78 @@ const EditQuiz: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   };
 
   return (
-    <div className="edit-quiz-container">
-      <h2>Izmeni kviz</h2>
-      <form className="edit-quiz-form" onSubmit={handleSubmit}>
-        <label>
-          Naslov:
-          <input
-            type="text"
-            name="title"
-            value={quizData.title}
-            onChange={handleChange}
-          />
-        </label>
+    <div>
+      <Header onLogout={handleLogout} />
 
-        <label>
-          Opis:
-          <textarea
-            name="description"
-            value={quizData.description}
-            onChange={handleChange}
-          />
-        </label>
+      <div className="edit-quiz-container">
+        <h2>Izmeni kviz</h2>
+        <form className="edit-quiz-form" onSubmit={handleSubmit}>
+          <label>
+            Naslov:
+            <input
+              type="text"
+              name="title"
+              value={quizData.title}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label>
-          Kategorija:
-          <input
-            type="text"
-            name="category"
-            value={quizData.category}
-            onChange={handleChange}
-          />
-        </label>
+          <label>
+            Opis:
+            <textarea
+              name="description"
+              value={quizData.description}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label>
-          Težina:
-          <select
-            name="difficulty"
-            value={quizData.difficulty}
-            onChange={handleChange}
-          >
-            <option value="Lako">Lako</option>
-            <option value="Srednje">Srednje</option>
-            <option value="Teško">Teško</option>
-          </select>
-        </label>
+          <label>
+            Kategorija:
+            <input
+              type="text"
+              name="category"
+              value={quizData.category}
+              onChange={handleChange}
+            />
+          </label>
 
-        <label>
-          Vreme (min):
-          <input
-            type="number"
-            name="timeLimit"
-            value={quizData.timeLimit}
-            onChange={handleChange}
-          />
-        </label>
+          <label>
+            Težina:
+            <select
+              name="difficulty"
+              value={quizData.difficulty}
+              onChange={handleChange}
+            >
+              <option value="Lako">Lako</option>
+              <option value="Srednje">Srednje</option>
+              <option value="Teško">Teško</option>
+            </select>
+          </label>
 
-        <div className="form-buttons">
-          <button
-            type="button"
-            className="back-btn"
-            onClick={() => navigate("/home")}
-          >
-            Nazad
-          </button>
-          <button type="submit" className="submit-btn">
-            Sačuvaj izmene
-          </button>
-        </div>
-      </form>
+          <label>
+            Vreme (min):
+            <input
+              type="number"
+              name="timeLimit"
+              value={quizData.timeLimit}
+              onChange={handleChange}
+            />
+          </label>
+
+          <div className="form-buttons">
+            <button
+              type="button"
+              className="back-btn"
+              onClick={() => navigate("/home")}
+            >
+              Nazad
+            </button>
+            <button type="submit" className="submit-btn">
+              Sačuvaj izmene
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

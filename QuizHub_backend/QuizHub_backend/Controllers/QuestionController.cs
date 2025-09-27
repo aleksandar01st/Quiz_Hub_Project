@@ -48,7 +48,7 @@ namespace QuizHub_backend.Controllers
 
         // PUT: api/Questions/5
         [HttpPut("{id}")]
-        public ActionResult<QuestionDto> UpdateQuestion(long id, CreateQuestionDto dto)
+        public ActionResult<QuestionDto> UpdateQuestion(long id, UpdateQuestionDto dto)
         {
             var updated = _service.Update(id, dto);
             return updated == null

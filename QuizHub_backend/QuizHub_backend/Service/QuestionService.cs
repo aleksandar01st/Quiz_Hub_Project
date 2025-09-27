@@ -32,6 +32,7 @@ namespace QuizHub_backend.Service
                 Text = dto.Text,
                 QuestionType = dto.QuestionType,
                 QuizId = dto.QuizId,
+                Weight = dto.Weight,
                 AnswerOptions = dto.AnswerOptions?.Select(a => new AnswerOption
                 {
                     Text = a.Text,
@@ -39,27 +40,6 @@ namespace QuizHub_backend.Service
                 }).ToList() ?? new List<AnswerOption>()
             };
             _repo.Add(question);
-            _repo.Save();
-            return ToDto(question);
-        }
-
-        public QuestionDto? Update(long id, CreateQuestionDto dto)
-        {
-            var question = _repo.GetById(id);
-            if (question == null) return null;
-
-            question.Text = dto.Text;
-            question.QuestionType = dto.QuestionType;
-            question.QuizId = dto.QuizId;
-            question.AnswerOptions.Clear();
-            question.AnswerOptions = dto.AnswerOptions?.Select(a => new AnswerOption
-            {
-                Text = a.Text,
-                IsCorrect = a.IsCorrect,
-                QuestionId = id
-            }).ToList() ?? new List<AnswerOption>();
-
-            _repo.Update(question);
             _repo.Save();
             return ToDto(question);
         }
@@ -73,6 +53,34 @@ namespace QuizHub_backend.Service
             return true;
         }
 
+        public QuestionDto? Update(long id, UpdateQuestionDto dto)
+        {
+            var q = _repo.GetById(id);
+            if (q == null) return null;
+
+            q.Text = dto.Text;
+            q.Weight = dto.Weight;
+            q.QuestionType = dto.QuestionType;
+
+            // Update odgovora
+            q.AnswerOptions.Clear(); // brišemo stare
+            if (dto.AnswerOptions != null)
+            {
+                q.AnswerOptions = dto.AnswerOptions.Select(a => new AnswerOption
+                {
+                    Text = a.Text,
+                    IsCorrect = a.IsCorrect
+                }).ToList();
+            }
+
+            _repo.Update(q);
+            _repo.Save();
+
+            return ToDto(q);
+        }
+
+
+
         private static QuestionDto ToDto(Question q) =>
             new QuestionDto
             {
@@ -80,6 +88,7 @@ namespace QuizHub_backend.Service
                 Text = q.Text,
                 QuestionType = q.QuestionType,
                 QuizId = q.QuizId,
+                Weight = q.Weight,
                 AnswerOptions = q.AnswerOptions?
                     .Select(a => new AnswerOptionDto
                     {

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuizHub_backend.Data;
 
@@ -11,9 +12,11 @@ using QuizHub_backend.Data;
 namespace QuizHub_backend.Migrations
 {
     [DbContext(typeof(QuizHubContext))]
-    partial class QuizHubContextModelSnapshot : ModelSnapshot
+    [Migration("20250927184027_AddWeightToQuestion")]
+    partial class AddWeightToQuestion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -8,5 +8,6 @@
         public DateTime DatePlayed { get; set; }
         public string Username { get; set; } = string.Empty;
         public string QuizTitle {  get; set; } = string.Empty;
+        public int TotalQuestions { get; set; }
     }
 }

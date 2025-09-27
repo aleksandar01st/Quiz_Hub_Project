@@ -58,9 +58,9 @@ namespace QuizHub_backend.Controllers
         }
 
         [HttpGet("top")]
-        public IActionResult GetTopResults([FromQuery] long? quizId, [FromQuery] DateTime? from, [FromQuery] DateTime? to)
+        public IActionResult GetTopResults([FromQuery] long? quizId, [FromQuery] string? period)
         {
-            var results = _service.GetTopResults(quizId, from, to);
+            var results = _service.GetTopResults(quizId, period);
             return Ok(results);
         }
     }

@@ -13,5 +13,7 @@ namespace QuizHub_backend.Repository
         IEnumerable<UserQuizResult> GetAllResults();
         IEnumerable<User> GetAllUsers();
         IEnumerable<UserQuizResult> GetAllResultsWithDetails();
+        int GetQuestionsCountForQuiz(long quizId);
+        Dictionary<long, int> GetQuestionsCountForQuizzes(IEnumerable<long> quizIds);
     }
 }

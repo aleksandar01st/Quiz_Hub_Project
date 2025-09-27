@@ -45,27 +45,16 @@ export const getUserAnswersByResult = async (resultId: number) => {
 
 export const getTopResults = async (
   quizId?: number,
-  period?: "weekly" | "monthly"
+  period?: "daily" | "weekly" | "monthly"
 ): Promise<TopResult[]> => {
   const params: any = {};
 
   if (quizId) params.quizId = quizId;
-
-  if (period) {
-    const now = new Date();
-    if (period === "weekly") {
-      const from = new Date();
-      from.setDate(now.getDate() - 7);
-      params.from = from.toISOString();
-    } else if (period === "monthly") {
-      const from = new Date();
-      from.setMonth(now.getMonth() - 1);
-      params.from = from.toISOString();
-    }
-  }
+  if (period) params.period = period; // slanje period string-a, ne from
 
   const response = await axios.get<TopResult[]>(`${API_URL}/results/top`, {
     params,
   });
+
   return response.data;
 };

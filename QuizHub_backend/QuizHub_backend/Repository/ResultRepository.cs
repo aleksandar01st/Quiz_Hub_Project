@@ -50,10 +50,25 @@ namespace QuizHub_backend.Repository
             return _context.UserQuizResults
                 .Include(r => r.User)
                 .Include(r => r.Quiz)
+                    .ThenInclude(q => q.Questions) // ovo je ključno da totalQuestions nije null
                 .Include(r => r.UserAnswers)
                     .ThenInclude(a => a.Question)
-                        .ThenInclude(q => q.AnswerOptions) // ovo je ključno
+                        .ThenInclude(q => q.AnswerOptions)
                 .ToList();
         }
+
+        public int GetQuestionsCountForQuiz(long quizId)
+        {
+            return _context.Questions.Count(q => q.QuizId == quizId);
+        }
+
+        public Dictionary<long, int> GetQuestionsCountForQuizzes(IEnumerable<long> quizIds)
+        {
+            return _context.Questions
+                .Where(q => quizIds.Contains(q.QuizId))
+                .GroupBy(q => q.QuizId)
+                .ToDictionary(g => g.Key, g => g.Count());
+        }
+
     }
 }

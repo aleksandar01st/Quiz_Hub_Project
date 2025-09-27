@@ -16,6 +16,7 @@ namespace QuizHub_backend.Models
         [Required]
         public long QuizId { get; set; }
         public Quiz Quiz { get; set; }
+        public int Weight { get; set; } = 1;
 
         public ICollection<AnswerOption> AnswerOptions { get; set; } = new List<AnswerOption>();
         public ICollection<UserAnswer> UserAnswers { get; set; } = new List<UserAnswer>();

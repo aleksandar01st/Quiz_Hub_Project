@@ -4,18 +4,14 @@ import { getTopResults, TopResult } from "../service/ResultsService";
 import { getAllQuizzes } from "../service/HomeService"; // koristimo servis za kvizove
 import { useNavigate } from "react-router-dom";
 import "./TopResults.css";
-
-interface Quiz {
-  id: number;
-  title: string;
-}
+import { Quiz } from "../helper/TakeQuiz";
 
 const TopResults: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   const [results, setResults] = useState<TopResult[]>([]);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [quizFilter, setQuizFilter] = useState<number | undefined>(undefined);
   const [periodFilter, setPeriodFilter] = useState<
-    "weekly" | "monthly" | undefined
+    "daily" | "weekly" | "monthly" | undefined
   >(undefined);
   const navigate = useNavigate();
 
@@ -82,11 +78,18 @@ const TopResults: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
               ))}
             </select>
           </label>
-
           <label>
             Filter po periodu:
-            <select onChange={(e) => setPeriodFilter(e.target.value as any)}>
+            <select
+              value={periodFilter || ""}
+              onChange={(e) =>
+                setPeriodFilter(
+                  e.target.value as "daily" | "weekly" | "monthly" | undefined
+                )
+              }
+            >
               <option value="">Sve</option>
+              <option value="daily">Dnevni</option>
               <option value="weekly">Nedeljni</option>
               <option value="monthly">Mesečni</option>
             </select>

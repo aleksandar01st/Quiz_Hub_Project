@@ -1,10 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { HeaderProps } from "../helper/HeaderProps";
 import "./Header.css";
-
-interface HeaderProps {
-  onLogout: () => void;
-}
 
 const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   const navigate = useNavigate();

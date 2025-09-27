@@ -17,6 +17,7 @@ import Leaderboard from "./components/Leaderboard/Leaderboard";
 import MyResults from "./components/MyResults/MyResults";
 import QuizResultDetails from "./components/QuizResultDetails/QuizResultDetails";
 import TopResults from "./components/TopResults/TopResults";
+import EditQuestion from "./components/EditQuestion/EditQuestion";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -149,6 +150,18 @@ const App: React.FC = () => {
             )
           }
         />
+
+        <Route
+          path="/add-or-edit-question/:questionId"
+          element={
+            isLoggedIn ? (
+              <EditQuestion onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

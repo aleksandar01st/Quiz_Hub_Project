@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getUserAnswersByResult, UserAnswer } from "../service/ResultsService";
-import axios from "axios";
 import Header from "../Header/Header";
 import "./QuizResultDetails.css";
 

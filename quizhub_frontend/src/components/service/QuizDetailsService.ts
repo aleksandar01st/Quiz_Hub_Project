@@ -21,7 +21,7 @@ export const getQuestionsByQuizId = async (quizId: number) => {
 };
 
 export const deleteQuestion = async (questionId: number) => {
-  const response = await axios.delete(`${API_URL}/Questions/${questionId}`);
+  const response = await axios.delete(`${API_URL}/Question/${questionId}`);
   return response.data;
 };
 
@@ -37,8 +37,18 @@ export const createQuestion = async (dto: {
 
 export const updateQuestion = async (
   id: number,
-  dto: { text: string; questionType: string; quizId: number }
+  dto: {
+    text: string;
+    questionType: string;
+    weight: number;
+    answerOptions?: { text: string; isCorrect: boolean }[];
+  }
 ) => {
-  const response = await axios.put(`${API_URL}/Question/${id}`, dto);
+  const response = await axios.put(`${API_URL}/Question/${id}`, dto, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
   return response.data;
 };

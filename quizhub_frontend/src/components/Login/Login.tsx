@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { login } from "../service/AuthService"; // prilagodi putanju
+import { login } from "../service/AuthService";
 import { LoginDto, AuthResponseDto } from "../helper/auth";
-
-interface LoginProps {
-  onLogin?: () => void; // opcioni callback
-}
+import { LoginProps } from "../helper/LoginProps";
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");

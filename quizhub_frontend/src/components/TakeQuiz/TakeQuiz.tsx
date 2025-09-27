@@ -6,20 +6,7 @@ import {
 } from "../service/QuizDetailsService";
 import "./TakeQuiz.css";
 import { saveResult, SaveResultDto } from "../service/ResultService";
-
-interface Question {
-  id: number;
-  text: string;
-  questionType: string;
-  quizId: number;
-  answerOptions?: { id: number; text: string; isCorrect: boolean }[];
-}
-
-interface Quiz {
-  id: number;
-  title: string;
-  timeLimit: number; // u minutima
-}
+import { Question, Quiz } from "../helper/TakeQuiz";
 
 const TakeQuiz: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -80,18 +67,22 @@ const TakeQuiz: React.FC = () => {
   };
 
   const handleFinishQuiz = async () => {
-    // računanje poena
     let score = 0;
+    let maxPoints = 0; // ukupna suma težina
+
     questions.forEach((q) => {
       const userAnswer = answers[q.id];
-      if (!userAnswer) return;
+      const questionWeight = q.weight || 1;
+      maxPoints += questionWeight; // sabiramo maksimalne poene
+
+      let questionScore = 0;
 
       if (q.questionType === "SingleChoice") {
         if (
           typeof userAnswer === "number" &&
           q.answerOptions?.some((opt) => opt.id === userAnswer && opt.isCorrect)
         ) {
-          score++;
+          questionScore = questionWeight;
         }
       } else if (q.questionType === "MultipleChoice") {
         const correctIds =
@@ -105,7 +96,7 @@ const TakeQuiz: React.FC = () => {
           );
 
           if (allCorrectChosen && noExtraChosen) {
-            score++;
+            questionScore = questionWeight;
           }
         }
       } else if (q.questionType === "TrueFalse") {
@@ -115,10 +106,9 @@ const TakeQuiz: React.FC = () => {
           (userAnswer === "false" &&
             q.answerOptions?.some((o) => o.text === "Netačno" && o.isCorrect))
         ) {
-          score++;
+          questionScore = questionWeight;
         }
       } else if (q.questionType === "Text") {
-        // exact match, ignorisanje velikih i malih slova i whitespace
         const correctAnswers =
           q.answerOptions
             ?.filter((o) => o.isCorrect)
@@ -127,10 +117,15 @@ const TakeQuiz: React.FC = () => {
           typeof userAnswer === "string" &&
           correctAnswers.includes(userAnswer.toLowerCase().trim())
         ) {
-          score++;
+          questionScore = questionWeight;
         }
       }
+
+      score += questionScore;
     });
+
+    const percentage =
+      maxPoints > 0 ? ((score / maxPoints) * 100).toFixed(0) : "0";
 
     if (!quiz) return;
 
@@ -171,7 +166,7 @@ const TakeQuiz: React.FC = () => {
       alert("Greška pri čuvanju rezultata");
     }
 
-    alert(`Kviz završen! Poeni: ${score}`);
+    alert(`Kviz završen! Poeni: ${score}, Procenat: ${percentage}%`);
     navigate(`/quiz-details/${quiz?.id}`);
   };
 

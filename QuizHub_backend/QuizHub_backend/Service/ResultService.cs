@@ -116,7 +116,7 @@ namespace QuizHub_backend.Service
 
         public IEnumerable<AllQuizResultDto> GetResultsByUser(long userId)
         {
-            return _repo.GetAllResults()
+            var results = _repo.GetAllResultsWithDetails()
                 .Where(r => r.User.Id == userId)
                 .Select(r => new AllQuizResultDto
                 {
@@ -125,11 +125,15 @@ namespace QuizHub_backend.Service
                     TimeTaken = r.TimeTaken,
                     DatePlayed = r.DatePlayed,
                     Username = r.User.Username,
-                    QuizTitle = r.Quiz.Title
+                    QuizTitle = r.Quiz.Title,
+                    TotalQuestions = r.Quiz.Questions.Count  // ovo sada radi jer je Include(r => r.Quiz).ThenInclude(q => q.Questions)
                 })
                 .OrderByDescending(r => r.DatePlayed)
                 .ToList();
+
+            return results;
         }
+
 
         public IEnumerable<UserAnswersDto> GetUserAnswers(long resultId)
         {
@@ -147,27 +151,48 @@ namespace QuizHub_backend.Service
             }).ToList();
         }
 
-        public IEnumerable<TopResultDto> GetTopResults(
-            long? quizId = null, DateTime? from = null, DateTime? to = null)
+        public IEnumerable<TopResultDto> GetTopResults(long? quizId = null, string? period = null)
         {
-            var results = _repo.GetAllResults(); // IEnumerable<UserQuizResult>
+            DateTime? from = null;
+            DateTime? to = null;
+            var now = DateTime.UtcNow;
 
-            // Filter po kvizu
+            if (!string.IsNullOrEmpty(period))
+            {
+                switch (period)
+                {
+                    case "daily":
+                        from = now.Date;                // danas od 00:00
+                        to = now.Date.AddDays(1);       // do sutra 00:00
+                        break;
+                    case "weekly":
+                        from = now.Date.AddDays(-(int)now.DayOfWeek); // početak nedelje (nedelja=0)
+                        to = from.Value.AddDays(7);                   // kraj nedelje
+                        break;
+                    case "monthly":
+                        from = new DateTime(now.Year, now.Month, 1);         // prvi dan tekućeg meseca
+                        to = from.Value.AddMonths(1);                        // prvi dan sledećeg meseca
+                        break;
+                }
+            }
+
+            var results = _repo.GetAllResults().AsQueryable();
+
             if (quizId.HasValue)
                 results = results.Where(r => r.Quiz.Id == quizId.Value);
 
-            // Filter po vremenskom periodu
             if (from.HasValue)
                 results = results.Where(r => r.DatePlayed >= from.Value);
             if (to.HasValue)
-                results = results.Where(r => r.DatePlayed <= to.Value);
+                results = results.Where(r => r.DatePlayed < to.Value); // <, ne <= da ne preklapamo
 
-            // Grupisanje po kvizu + uzimanje najboljih rezultata
+            // Grupisanje po kvizu + najbolji rezultati
             var topResults = results
                 .GroupBy(r => r.Quiz.Id)
                 .SelectMany(g => g
                     .OrderByDescending(r => r.Score)
-                    .ThenBy(r => r.DatePlayed) // ako je score isti, raniji rezultat je bolji
+                    .ThenBy(r => r.TimeTaken)
+                    .ThenBy(r => r.DatePlayed)
                     .Select((r, index) => new TopResultDto
                     {
                         QuizId = r.Quiz.Id,
@@ -183,6 +208,5 @@ namespace QuizHub_backend.Service
 
             return topResults;
         }
-
     }
 }
